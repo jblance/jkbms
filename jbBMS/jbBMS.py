@@ -15,11 +15,9 @@ notifyUuid          = '0000ffe1-0000-1000-8000-00805f9b34fb'
 writeUuid           = '0000ffe2-0000-1000-8000-00805f9b34fb'
 readUuid            = '0000ffe3-0000-1000-8000-00805f9b34fb'
 pw2Mac = '3c:a5:09:0a:26:a6'
+
 name = 'jbBMS-{}'.format(math.trunc(random.random()*100))
-
 print('bleno - Echo with name: {}'.format(name))
-
-bleno = Bleno()
 
 def onStateChange(state):
    print('on -> stateChange: ' + state)
@@ -46,12 +44,13 @@ def onAdvertisingStart(error):
                     ]
             })
         ])
-bleno.on('advertisingStart', onAdvertisingStart)
 
+bleno = Bleno()
+bleno.on('advertisingStart', onAdvertisingStart)
 bleno.start()
 
-print ('Hit <ENTER> to disconnect')
 
+print ('Hit <ENTER> to disconnect')
 if (sys.version_info > (3, 0)):
     input()
 else:
@@ -61,4 +60,3 @@ bleno.stopAdvertising()
 bleno.disconnect()
 
 print ('terminated.')
-sys.exit(1)
