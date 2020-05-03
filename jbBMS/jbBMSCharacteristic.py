@@ -56,3 +56,7 @@ class jbBMSCharacteristic(Characteristic):
         print('jbBMSCharacteristic - onUnsubscribe');
 
         self._updateValueCallback = None
+
+    def onNotify(self):
+        print('jbBMSCharacteristic - onNotify');
+        print(self._value)
