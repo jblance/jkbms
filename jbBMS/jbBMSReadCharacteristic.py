@@ -14,21 +14,7 @@ class jbBMSReadCharacteristic(Characteristic):
         Characteristic.__init__(self, {
             'uuid': uuid,
             'properties': ['read', 'write'],
-            'value': None,
-            'descriptors' : [
-                Descriptor({
-                    'uuid': '000a',
-                    'value': 'A string value'
-                }),
-                Descriptor({
-                    'uuid': '000b',
-                    'value': array.array('B', [0x04, 0x01, 0x27, 0xAD, 0x01, 0x00, 0x00 ])
-                }),
-                Descriptor({
-                    'uuid': '000c',
-                    'value': array.array('B', [0x04, 0x01, 0x27, 0xAD, 0x01, 0x00, 0x00 ])
-                })
-            ]
+            'value': None
         })
         print ('jbBMSReadCharacteristic __init__', uuid)
         self._value = array.array('B', [0] * 0)
