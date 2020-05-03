@@ -19,6 +19,8 @@ pw2Mac = '3c:a5:09:0a:26:a6'
 name = 'jbBMS-{}'.format(math.trunc(random.random()*100))
 print('bleno - Echo with name: {}'.format(name))
 
+bleno = Bleno()
+
 def onStateChange(state):
    print('on -> stateChange: ' + state)
 
@@ -38,14 +40,14 @@ def onAdvertisingStart(error):
             BlenoPrimaryService({
                 'uuid': primaryUuid,
                 'characteristics': [
-                    jbBMSCharacteristic(notifyUuid),
-                    jbBMSCharacteristic(writeUuid),
-                    jbBMSCharacteristic(readUuid)
+                    jbBMSNotifyCharacteristic(notifyUuid),
+                    jbBMSWriteCharacteristic(writeUuid),
+                    jbBMSReadCharacteristic(readUuid)
                     ]
             })
         ])
 
-bleno = Bleno()
+
 bleno.on('advertisingStart', onAdvertisingStart)
 bleno.start()
 
