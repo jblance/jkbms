@@ -13,7 +13,7 @@ class jbBMSWriteCharacteristic(Characteristic):
     def __init__(self, uuid):
         Characteristic.__init__(self, {
             'uuid': uuid,
-            'properties': ['read', 'write'],
+            'properties': ['read', 'write', 'notify'],
             'value': None
         })
         print ('jbBMSWriteCharacteristic __init__', uuid)

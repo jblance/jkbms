@@ -13,7 +13,7 @@ class jbBMSNotifyCharacteristic(Characteristic):
     def __init__(self, uuid):
         Characteristic.__init__(self, {
             'uuid': uuid,
-            'properties': ['write', 'notify'],
+            'properties': ['read', 'write', 'notify'],
             'value': None,
             'descriptors' : [
                 Descriptor({
