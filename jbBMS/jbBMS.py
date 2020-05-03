@@ -44,7 +44,9 @@ def onAdvertisingStart(error):
             BlenoPrimaryService({
                 'uuid': primaryUuid,
                 'characteristics': [
-                    jbBMSCharacteristic(notifyUuid)
+                    jbBMSCharacteristic(notifyUuid),
+                    jbBMSCharacteristic(readUuid),
+                    jbBMSCharacteristic(writeUuid)
                     ]
             })
         ])

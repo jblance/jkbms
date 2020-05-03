@@ -51,9 +51,9 @@ class jbBMSCharacteristic(Characteristic):
 
         callback(Characteristic.RESULT_SUCCESS)
 
-    def onSubscribe(self, maxValueSize, updateValueCallback):
-        print('jbBMSCharacteristic - onSubscribe')
-        self._updateValueCallback = updateValueCallback
+    #def onSubscribe(self, maxValueSize, updateValueCallback):
+    #    print('jbBMSCharacteristic - onSubscribe')
+    #    self._updateValueCallback = updateValueCallback
 
     def onUnsubscribe(self):
         print('jbBMSCharacteristic - onUnsubscribe')
@@ -65,5 +65,5 @@ class jbBMSCharacteristic(Characteristic):
         for c in self._value:
             print(hex(c))
         #try with callback
-        self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
+        #self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
         #self._updateValueCallback(bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000'))
