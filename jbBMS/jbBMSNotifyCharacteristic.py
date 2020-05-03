@@ -46,7 +46,7 @@ class jbBMSNotifyCharacteristic(Characteristic):
         #self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
 
         if self._updateValueCallback:
-            print('jbBMSNotifyCharacteristic - onWriteRequest: notifying');
+            print('jbBMSNotifyCharacteristic - onWriteRequest: notifying')
             self._updateValueCallback(self._value)
 
         callback(Characteristic.RESULT_SUCCESS)
@@ -57,12 +57,12 @@ class jbBMSNotifyCharacteristic(Characteristic):
         self._updateValueCallback = updateValueCallback
 
     def onUnsubscribe(self):
-        print('jbBMSNotifyCharacteristic - onUnsubscribe');
+        print('jbBMSNotifyCharacteristic - onUnsubscribe')
 
         self._updateValueCallback = None
 
     def onNotify(self):
-        print('jbBMSNotifyCharacteristic - onNotify');
+        print('jbBMSNotifyCharacteristic - onNotify')
         for c in self._value:
             print(hex(c))
         #try with callback

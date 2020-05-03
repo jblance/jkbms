@@ -26,7 +26,7 @@ class jbCharacteristic(Characteristic):
         print('EchoCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
 
         if self._updateValueCallback:
-            print('jbCharacteristic - onWriteRequest: notifying');
+            print('jbCharacteristic - onWriteRequest: notifying')
 
             self._updateValueCallback(self._value)
 
@@ -38,6 +38,6 @@ class jbCharacteristic(Characteristic):
         self._updateValueCallback = updateValueCallback
 
     def onUnsubscribe(self):
-        print('jbCharacteristic - onUnsubscribe');
+        print('jbCharacteristic - onUnsubscribe')
 
         self._updateValueCallback = None
