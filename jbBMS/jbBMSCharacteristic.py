@@ -3,6 +3,7 @@ import array
 import struct
 import sys
 import traceback
+from builtins import bytes
 
 class jbBMSCharacteristic(Characteristic):
 
@@ -37,6 +38,7 @@ class jbBMSCharacteristic(Characteristic):
 
         if self._updateValueCallback:
             print('jbBMSCharacteristic - onWriteRequest: notifying');
+            callback(Characteristic.RESULT_SUCCESS, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
 
             self._updateValueCallback(self._value)
 
