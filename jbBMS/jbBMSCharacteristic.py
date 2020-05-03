@@ -5,6 +5,8 @@ import sys
 import traceback
 from builtins import bytes
 
+ATT_OP_HANDLE_NOTIFY = 0x1b
+
 class jbBMSCharacteristic(Characteristic):
 
     def __init__(self, uuid):
@@ -35,11 +37,11 @@ class jbBMSCharacteristic(Characteristic):
         self._value = data
 
         print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
+        # data written - check what it was and handle? and respond...
+        callback(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
 
         if self._updateValueCallback:
             print('jbBMSCharacteristic - onWriteRequest: notifying');
-            callback(Characteristic.RESULT_SUCCESS, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
-
             self._updateValueCallback(self._value)
 
         callback(Characteristic.RESULT_SUCCESS)
