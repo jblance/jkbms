@@ -59,4 +59,5 @@ class jbBMSCharacteristic(Characteristic):
 
     def onNotify(self):
         print('jbBMSCharacteristic - onNotify');
-        print(self._value)
+        for c in self._value:
+            print(hex(c))
