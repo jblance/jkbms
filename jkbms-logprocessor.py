@@ -23,7 +23,8 @@ logging.basicConfig()
 logfile0 = './jkbms0.log'
 logfile1 = './jkbms1.log'
 logfile2 = './jkbms2.log'
-logfile3 = './jkbms3.log'
+logfile3 = './jkbms5.log'
+logfile4 = './jkbms6.log'
 
 
 def chunkString(name, string, length):
@@ -79,11 +80,12 @@ def processRecord(record):
 
 
 
-with open(logfile0) as f0, open(logfile1) as f1, open(logfile2) as f2, open(logfile3) as f3:
+with open(logfile0) as f0, open(logfile1) as f1, open(logfile2) as f2, open(logfile3) as f3, open(logfile4) as f4:
      fileContents0 = f0.read()
      fileContents1 = f1.read()
      fileContents2 = f2.read()
      fileContents3 = f3.read()
+     fileContents4 = f4.read()
 # record 1 is device info
 # record 2 is initial response from extended info request
 # record 3-22 are extended info requests
@@ -104,10 +106,10 @@ with open(logfile0) as f0, open(logfile1) as f1, open(logfile2) as f2, open(logf
 #     ))
 
 cell = 1
-for fileNum in (fileContents0, fileContents1, fileContents2, fileContenst3):
+for fileNum in (fileContents0, fileContents1, fileContents2, fileContents3, fileContents4):
     for recNum in range(3,22):
         record = getRecord(fileNum, recNum)
-        print int('0x{}'.format(record[8:12]), 16), record[cell*12:cell*12+8]
+        print ('{} 0x{} {}'.format(record[0:10], record[10:12], record[cell*12:cell*12+8]))
 
 ## file is hex, but stored as ascii
 # for line in fileContents:
@@ -127,3 +129,4 @@ for fileNum in (fileContents0, fileContents1, fileContents2, fileContenst3):
 # processRecord(currentRecord)
     #print (line)
 #print ('Found {} records'.format(recordCount-1))
+
