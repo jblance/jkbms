@@ -5,8 +5,8 @@ import math, random
 #from jbBMSNotifyCharacteristic import *
 #from jbBMSReadCharacteristic import *
 #from jbBMSWriteCharacteristic import *
-#from jbBMSCharacteristic import *
-from jbCharacteristic import *
+from jbBMSCharacteristic import *
+#from jbCharacteristic import *
 
 
 origLEAdvertisingR  = 'a6260a09a53ca08805b6ff0b-fee7ffe00205'
@@ -44,7 +44,7 @@ def onAdvertisingStart(error):
             BlenoPrimaryService({
                 'uuid': primaryUuid,
                 'characteristics': [
-                    jbCharacteristic(notifyUuid)
+                    jbBMSCharacteristic(notifyUuid)
                     ]
             })
         ])
