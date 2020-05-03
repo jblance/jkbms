@@ -2,7 +2,7 @@ from pybleno import *
 import sys
 import signal
 import math, random
-from EchoCharacteristic import *
+from jbBMSCharacteristic import *
 
 
 origLEAdvertisingR  = 'a6260a09a53ca08805b6ff0b-fee7ffe00205'
@@ -40,9 +40,9 @@ def onAdvertisingStart(error):
             BlenoPrimaryService({
                 'uuid': primaryUuid,
                 'characteristics': [
-                    EchoCharacteristic(notifyUuid),
-                    EchoCharacteristic(writeUuid),
-                    EchoCharacteristic(readUuid)
+                    jbBMSCharacteristic(notifyUuid),
+                    jbBMSCharacteristic(writeUuid),
+                    jbBMSCharacteristic(readUuid)
                     ]
             })
         ])
