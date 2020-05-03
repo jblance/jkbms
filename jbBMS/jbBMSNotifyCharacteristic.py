@@ -30,39 +30,39 @@ class jbBMSNotifyCharacteristic(Characteristic):
                 })
             ]
         })
-        print ('Characteristic __init__', uuid)
+        print ('jbBMSNotifyCharacteristic __init__', uuid)
         self._value = array.array('B', [0] * 0)
         self._updateValueCallback = None
 
     def onReadRequest(self, offset, callback):
-        print('jbBMSCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
+        print('jbBMSNotifyCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
         callback(Characteristic.RESULT_SUCCESS, self._value[offset:])
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         self._value = data
 
-        print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
+        print('jbBMSNotifyCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
         # data written - check what it was and handle? and respond...
         #self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
 
         if self._updateValueCallback:
-            print('jbBMSCharacteristic - onWriteRequest: notifying');
+            print('jbBMSNotifyCharacteristic - onWriteRequest: notifying');
             self._updateValueCallback(self._value)
 
         callback(Characteristic.RESULT_SUCCESS)
 
     def onSubscribe(self, maxValueSize, updateValueCallback):
-        print('jbBMSCharacteristic - onSubscribe')
+        print('jbBMSNotifyCharacteristic - onSubscribe')
 
         self._updateValueCallback = updateValueCallback
 
     def onUnsubscribe(self):
-        print('jbBMSCharacteristic - onUnsubscribe');
+        print('jbBMSNotifyCharacteristic - onUnsubscribe');
 
         self._updateValueCallback = None
 
     def onNotify(self):
-        print('jbBMSCharacteristic - onNotify');
+        print('jbBMSNotifyCharacteristic - onNotify');
         for c in self._value:
             print(hex(c))
         #try with callback
