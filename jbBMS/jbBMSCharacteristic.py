@@ -54,7 +54,7 @@ getCellInfoDataInitial = array.array('B', bytes.fromhex('55aaeb9001f30000803f000
 
 with open('testinput.txt') as f:
     data = f.read()
-    data = data.replace('\r', '')
+    data = data.replace('\n', '')
     getCellInfoDataRepeat = array.array('B', bytes.fromhex(data))
 
 
