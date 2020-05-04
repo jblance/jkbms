@@ -55,7 +55,7 @@ class jbBMSCharacteristic(Characteristic):
                 #self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self.updateValueCallback:
                     print('jbBMSCharacteristic - onWriteRequest, chunk sent' )
-                    self.updateValueCallback(self._value)
+                    #self.updateValueCallback(self._value)
         else:
             self._value = data
             #print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
@@ -69,17 +69,17 @@ class jbBMSCharacteristic(Characteristic):
 
         callback(Characteristic.RESULT_SUCCESS)
 
-    #def onSubscribe(self, maxValueSize, updateValueCallback):
-    #    print('jbBMSCharacteristic - onSubscribe')
-    #    #print (self._uuid)
-    #    self.maxValueSize = maxValueSize
-    #    #print ('Set maxValueSize', maxValueSize)
-    #    self.updateValueCallback = updateValueCallback
-    #    #print ('Set updateValueCallback', updateValueCallback)
-
     def onSubscribe(self, maxValueSize, updateValueCallback):
         print('jbBMSCharacteristic - onSubscribe')
-        self._updateValueCallback = updateValueCallback
+        #print (self._uuid)
+        self.maxValueSize = maxValueSize
+        #print ('Set maxValueSize', maxValueSize)
+        self.updateValueCallback = updateValueCallback
+        #print ('Set updateValueCallback', updateValueCallback)
+
+    #def onSubscribe(self, maxValueSize, updateValueCallback):
+    #    print('jbBMSCharacteristic - onSubscribe')
+    #    self._updateValueCallback = updateValueCallback
 
     def onUnsubscribe(self):
         print('jbBMSCharacteristic - onUnsubscribe')
