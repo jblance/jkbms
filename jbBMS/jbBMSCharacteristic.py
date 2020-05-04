@@ -8,6 +8,9 @@ from builtins import bytes
 
 ATT_OP_HANDLE_NOTIFY = 0x1b
 
+getInfo = '\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
+getCellInfo = '\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
+
 class jbBMSCharacteristic(Characteristic):
 
     def __init__(self, uuid):
@@ -38,6 +41,10 @@ class jbBMSCharacteristic(Characteristic):
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         print ('onWriteRequest')
+        if data == getInfo:
+            print ('Got getInfo request')
+        if data == getCellInfo:
+            print ('Got getCellInfo request')
         if hex(data[0]) == '0xaa' and hex(data[1]) == '0x55':
             print ('got data meeting info request pattern')
             #print data, offset, withoutResponse, callback
