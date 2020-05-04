@@ -20,7 +20,7 @@ writeUuid           = '0000ffe2-0000-1000-8000-00805f9b34fb'
 readUuid            = '0000ffe3-0000-1000-8000-00805f9b34fb'
 pw2Mac = '3c:a5:09:0a:26:a6'
 
-name = 'jbBMS-{}'.format(math.trunc(random.random()*100))
+name = 'jbBMS-v2'
 print('bleno - Echo with name: {}'.format(name))
 
 bleno = Bleno()
