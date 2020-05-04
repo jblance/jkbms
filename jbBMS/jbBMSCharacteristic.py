@@ -49,10 +49,10 @@ class jbBMSCharacteristic(Characteristic):
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         print ('onWriteRequest')
-        if data == getInfo:
-            print ('Got getInfo request')
         if data == getCellInfo:
             print ('Got getCellInfo request')
+        if data == getInfo:
+            print ('Got getInfo request')
             # chunk to max size
             chunks = getChunks(cellInfoData, self._maxValueSize)
             for chunk in chunks:
