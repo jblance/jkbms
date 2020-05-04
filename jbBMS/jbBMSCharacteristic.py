@@ -15,10 +15,10 @@ getCellInfoDataInitial = array.array('B', bytes.fromhex('55aaeb9001f30000803f000
 getCellInfoDataRepeat = array.array('B', bytes.fromhex('55aaeb9002f3ec426140f3466240011c6240593a62403f976240bbc16240cbb96240edb762404c6c62401fa762400fb662400da16240739b6240b47b62408c3e6240d7876240000000000000000000000000000000000000000000000000000000000000000013315c3d0636143d26e0113d8021f03c1153363d8980123d7e7c033dac41233d1ad83c3d9d6f4f3d8eb51e3d6a2c293deb28653d189c523da3724e3deb94493d9ab2c23d0000000000000000000000000000000000000000000000000000000000000000947162408067bf3c00000000ffff000005000000000000000000000000000086324e4c4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009435500cde4a33fae77a43f0095'))
 
 
-def getChunks(data, size):
+def getChunks(_data, _size):
     chunks = []
-    for i in range(0, len(data), size):
-        chunks.append(data[0+i:size+i])
+    for i in range(0, len(_data), _size):
+        chunks.append(_data[0+i:_size+i])
     return chunks
 
 class jbBMSCharacteristic(Characteristic):
@@ -56,7 +56,7 @@ class jbBMSCharacteristic(Characteristic):
             print ('Got getInfo request')
             chunks = getChunks(getInfo, self._maxValueSize)
             for chunk in chunks:
-                #print chunk
+                print chunk
                 self._value = chunk
                 #self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self._updateValueCallback:
