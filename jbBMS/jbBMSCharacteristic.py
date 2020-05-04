@@ -31,6 +31,7 @@ class jbBMSCharacteristic(Characteristic):
             ]
         })
         print ('jbBMSCharacteristic __init__', uuid)
+        self._uuid = uuid
         self._value = array.array('B', [0] * 0)
         self._updateValueCallback = None
 
@@ -59,7 +60,7 @@ class jbBMSCharacteristic(Characteristic):
         callback(Characteristic.RESULT_SUCCESS)
 
     def onSubscribe(self, maxValueSize, updateValueCallback):
-        print('jbBMSCharacteristic - onSubscribe')
+        print('jbBMSCharacteristic - onSubscribe', self._uuid)
         self.maxValueSize = maxValueSize
         self.updateValueCallback = updateValueCallback
 
