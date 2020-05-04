@@ -37,6 +37,7 @@ class jbBMSCharacteristic(Characteristic):
         callback(Characteristic.RESULT_SUCCESS, self._value[offset:])
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
+        print ('onWriteRequest')
         if hex(data[0]) == '0xaa' and hex(data[1]) == '0x55':
             print ('got data meeting info request pattern')
             #print data, offset, withoutResponse, callback
