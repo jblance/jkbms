@@ -56,7 +56,7 @@ class jbBMSCharacteristic(Characteristic):
                 #self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self._updateValueCallback:
                     print('jbBMSCharacteristic - onWriteRequest, chunk sent' )
-                    #self.updateValueCallback(self._value)
+                    self._updateValueCallback(self._value)
         else:
             self._value = data
             #print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
