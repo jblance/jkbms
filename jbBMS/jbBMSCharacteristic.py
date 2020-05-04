@@ -30,7 +30,7 @@ class jbBMSCharacteristic(Characteristic):
         self._uuid = uuid
         self._value = array.array('B', [0] * 0)
         self._updateValueCallback = None
-        self._maxValueSize = 10
+        self._maxValueSize = 20
 
     def onReadRequest(self, offset, callback):
         print('jbBMSCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
