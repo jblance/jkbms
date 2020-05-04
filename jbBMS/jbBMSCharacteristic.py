@@ -10,6 +10,13 @@ ATT_OP_HANDLE_NOTIFY = 0x1b
 
 getInfo = '\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
 getCellInfo = '\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
+cellInfoData = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d42314132345300000000000000332e300000000000332e312e32000000b0b878000f000000506f7765722057616c6c203200000000313233340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000abaa5590ebc8010100000000000000000000000044'))
+
+def getChunks(data, size):
+    chunks = []
+    for i in range(0, len(data), size):
+        chunks.append(data[0+i:size+i])
+    return chunks
 
 class jbBMSCharacteristic(Characteristic):
 
@@ -35,6 +42,7 @@ class jbBMSCharacteristic(Characteristic):
         self._updateValueCallback = None
         self._maxValueSize = 20
 
+
     def onReadRequest(self, offset, callback):
         print('jbBMSCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
         callback(Characteristic.RESULT_SUCCESS, self._value[offset:])
@@ -45,20 +53,10 @@ class jbBMSCharacteristic(Characteristic):
             print ('Got getInfo request')
         if data == getCellInfo:
             print ('Got getCellInfo request')
-        if hex(data[0]) == '0xaa' and hex(data[1]) == '0x55':
-            print ('got data meeting info request pattern')
-            #print data, offset, withoutResponse, callback
-            print self._uuid
-            print self._updateValueCallback
-            #self._value = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000'))
-            infoData = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d42314132345300000000000000332e300000000000332e312e32000000b0b878000f000000506f7765722057616c6c203200000000313233340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000abaa5590ebc8010100000000000000000000000044'))
             # chunk to max size
-            chunks = []
-            #result.append('{:^{width}}'.format(name[0:length], width=length))
-            for i in range(0, len(infoData), self._maxValueSize):
-                chunks.append(infoData[0+i:self._maxValueSize+i])
+            chunks = getChunks(cellInfoData, self._maxValueSize)
             for chunk in chunks:
-                print chunk
+                #print chunk
                 self._value = chunk
                 #self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self._updateValueCallback:
