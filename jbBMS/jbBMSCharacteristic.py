@@ -42,7 +42,7 @@ class jbBMSCharacteristic(Characteristic):
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         if hex(data[0]) == '0xaa' and hex(data[1]) == '0x55':
             print ('got data meeting info request pattern')
-            print data, offset, withoutResponse, callback
+            #print data, offset, withoutResponse, callback
             print self._uuid
             print self._updateValueCallback
             #self._value = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000'))
