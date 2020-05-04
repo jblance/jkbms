@@ -34,6 +34,14 @@ class jbBMSCharacteristic(Characteristic):
         self._uuid = uuid
         self._value = array.array('B', [0] * 0)
         self._updateValueCallback = None
+        self._maxValueSize = 10
+
+    def chunkValue(value, length):
+        result = []
+        #result.append('{:^{width}}'.format(name[0:length], width=length))
+        for i in range(0, len(value), length):
+            result.append(value[0+i:length+i])
+        return result
 
     def onReadRequest(self, offset, callback):
         print('jbBMSCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
@@ -46,8 +54,13 @@ class jbBMSCharacteristic(Characteristic):
             print self._uuid
             print self._updateValueCallback
             #self._value = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000'))
-            self._value = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d42314132345300000000000000332e300000000000332e312e32000000b0b878000f000000506f7765722057616c6c203200000000313233340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000abaa5590ebc8010100000000000000000000000044'))
-            self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
+            infoData = array.array('B', bytes.fromhex('55aaeb9003b44a4b2d42314132345300000000000000332e300000000000332e312e32000000b0b878000f000000506f7765722057616c6c203200000000313233340000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000abaa5590ebc8010100000000000000000000000044'))
+            # chunk to max size
+            chunks = chunkValue(infoData, self._maxValueSize)
+            for chunk in chunks:
+                print chunk
+                self._value = chunk
+                self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
         else:
             self._value = data
             #print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
@@ -62,8 +75,9 @@ class jbBMSCharacteristic(Characteristic):
         callback(Characteristic.RESULT_SUCCESS)
 
     def onSubscribe(self, maxValueSize, updateValueCallback):
-        print('jbBMSCharacteristic - onSubscribe', self._uuid, maxValueSize, updateValueCallback)
-        self.maxValueSize = maxValueSize
+        print('jbBMSCharacteristic - onSubscribe')
+        #print (self._uuid, maxValueSize, updateValueCallback)
+        self._maxValueSize = maxValueSize
         self._updateValueCallback = updateValueCallback
 
     #def onSubscribe(self, maxValueSize, updateValueCallback):
