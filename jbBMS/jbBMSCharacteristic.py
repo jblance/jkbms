@@ -17,12 +17,12 @@ class jbBMSCharacteristic(Characteristic):
             'value': None,
             'descriptors' : [
                 Descriptor({
-                    'uuid': '000a',
-                    'value': 'Notify char descriptor a'
+                    'uuid': '2901',
+                    'value': 'Descriptor'
                 }),
                 Descriptor({
-                    'uuid': '000b',
-                    'value': array.array('B', [0x04, 0x01, 0x27, 0xAD, 0x01, 0x00, 0x00 ])
+                    'uuid': '2902',
+                    'value': 'String 2902'
                 }),
                 Descriptor({
                     'uuid': '000c',
