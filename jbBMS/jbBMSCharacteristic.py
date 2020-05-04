@@ -76,7 +76,7 @@ class jbBMSCharacteristic(Characteristic):
 
     def onNotify(self):
         print('jbBMSCharacteristic - onNotify')
-        #for c in self._value:
+        print('self._value len: ', len(self._value))
         #    print(hex(c))
         #try with callback
         #self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
