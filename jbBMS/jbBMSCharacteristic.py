@@ -23,10 +23,6 @@ class jbBMSCharacteristic(Characteristic):
                 Descriptor({
                     'uuid': '2902',
                     'value': 'String 2902'
-                }),
-                Descriptor({
-                    'uuid': '000c',
-                    'value': array.array('B', [0x04, 0x01, 0x27, 0xAD, 0x01, 0x00, 0x00 ])
                 })
             ]
         })
