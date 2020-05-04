@@ -56,7 +56,7 @@ class jbBMSCharacteristic(Characteristic):
             print ('Got getInfo request')
             chunks = getChunks(getInfo, self._maxValueSize)
             for chunk in chunks:
-                print chunk
+                print chunk, len(chunk)
                 self._value = chunk
                 #self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self._updateValueCallback:
