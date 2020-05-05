@@ -64,7 +64,7 @@ with open('testinput.txt') as f:
     data = f.read()
     data = data.replace('\n', '')
     crc = crc8(data)
-    getCellInfoDataRepeat = array.array('B', bytes.fromhex(data) + hex(crc))
+    getCellInfoDataRepeat = array.array('B', bytes.fromhex(data) + crc)
     print (getCellInfoDataRepeat)
 
 
