@@ -65,6 +65,7 @@ with open('testinput.txt') as f:
     data = data.replace('\n', '')
     crc = crc8(data)
     getCellInfoDataRepeat = array.array('B', bytes.fromhex(data) + hex(crc))
+    print (getCellInfoDataRepeat)
 
 
 def getChunks(_data, _size):
