@@ -64,11 +64,12 @@ with open('testinput.txt') as f:
     data = f.read()
     data = data.replace('\n', '')
     crc = crc8(data)
+    print (crc, hex(crc))
     if crc < 16:
         crc = '0{}'.format(hex(crc)[2:])
     else:
         crc = '{}'.format(hex(crc)[2:4])
-    print (crc, hex(crc))
+    print (crc)
     getCellInfoDataRepeat = array.array('B', bytes.fromhex(data) + bytes.fromhex(crc))
     print (getCellInfoDataRepeat)
 
