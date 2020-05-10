@@ -16,7 +16,7 @@ def decodeVolts(hexString):
 
 
 parser = ArgumentParser(description='BM Voltage Decode Utility')
-parser.add_argument('-h', '--hexVolts', help='Hex encoded voltage measurement', default='00006240')
+parser.add_argument('-x', '--hexVolts', help='Hex encoded voltage measurement', default='00006240')
 args = parser.parse_args()
 
 if len(args.hexVolts) != 8:
