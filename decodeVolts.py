@@ -6,7 +6,8 @@ def decodeVolts(hexString):
     volts = 0
 
     # Make sure supplied String is long enough
-    if len(hexString):
+    if len(hexString) != 8:
+        print('Hex encoded value must be 4 bytes long')
         return None
 
     #MSB
@@ -18,9 +19,5 @@ def decodeVolts(hexString):
 parser = ArgumentParser(description='BM Voltage Decode Utility')
 parser.add_argument('-x', '--hexVolts', help='Hex encoded voltage measurement', default='00006240')
 args = parser.parse_args()
-
-if len(args.hexVolts) != 8:
-    print('Hex encoded value must be 4 bytes long')
-    sys.exit(1)
 
 print(decodeVolts(args.hexVolts))
