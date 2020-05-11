@@ -12,15 +12,16 @@ logging.basicConfig()
 import configparser
 config = configparser.ConfigParser()
 
+EXTENDED_RECORD = 1
+CELL_DATA       = 2
+INFO_RECORD     = 3
 
 
 class jkBmsDelegate(btle.DefaultDelegate):
     '''
     BLE delegate to deal with notifications (information) from the JKBMS device
     '''
-    EXTENDED_RECORD = 1
-    CELL_DATA       = 2
-    INFO_RECORD     = 3
+
 
     def __init__(self, params):
         btle.DefaultDelegate.__init__(self)
