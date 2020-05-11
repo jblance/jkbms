@@ -37,13 +37,13 @@ class jkBmsDelegate(btle.DefaultDelegate):
             # check the crc/checksum is correct for the record data
             crc = ord(self.notificationData[-1:])
             calcCrc = self.crc8(self.notificationData[:-1])
-            print (crc, calcCrc)
+            #print (crc, calcCrc)
             if crc == calcCrc:
                 return True
         return False
 
     def processRecord(self, record):
-        print(record[3])
+        print(record[4])
 
     def decodeVolts(hexString):
         '''
