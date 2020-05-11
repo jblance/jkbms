@@ -176,27 +176,31 @@ def main():
 
         # Get the handles that we need to talk to
         ### Read
-        characteristicReadUuid = '0000ffe3-0000-1000-8000-00805f9b34fb'
-        characteristicRead = serviceNotify.getCharacteristics(characteristicReadUuid)[0]
+        #characteristicReadUuid = '0000ffe3-0000-1000-8000-00805f9b34fb'
+        characteristicReadUuid = 'ffe3'
+        characteristicReads = serviceNotify.getCharacteristics(characteristicReadUuid)
+        for character in characteristicReads:
+            print(character)
+        characteristicRead = characteristicReads[0]
         handleRead = characteristicRead.getHandle()
         log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
         ### Write
-        characteristicWriteUuid = '0000ffe2-0000-1000-8000-00805f9b34fb'
-        characteristicWrite = serviceNotify.getCharacteristics(characteristicWriteUuid)[0]
-        handleWrite = characteristicWrite.getHandle()
-        log.info ('Write characteristic: {}, handle {:x}'.format(characteristicWrite, handleWrite))
+        #characteristicWriteUuid = '0000ffe2-0000-1000-8000-00805f9b34fb'
+        #characteristicWrite = serviceNotify.getCharacteristics(characteristicWriteUuid)[0]
+        #handleWrite = characteristicWrite.getHandle()
+        #log.info ('Write characteristic: {}, handle {:x}'.format(characteristicWrite, handleWrite))
         ### Notify
-        characteristicNotifyUuid = '0000ffe1-0000-1000-8000-00805f9b34fb'
-        characteristicNotify = serviceNotify.getCharacteristics(characteristicNotifyUuid)[0]
-        handleNotify = characteristicNotify.getHandle()
-        log.info ('Notify characteristic: {}, handle {:x}'.format(characteristicNotify, handleNotify))
+        #characteristicNotifyUuid = '0000ffe1-0000-1000-8000-00805f9b34fb'
+        #characteristicNotify = serviceNotify.getCharacteristics(characteristicNotifyUuid)[0]
+        #handleNotify = characteristicNotify.getHandle()
+        #log.info ('Notify characteristic: {}, handle {:x}'.format(characteristicNotify, handleNotify))
 
 
         ### TODO sort below
         # Need to dynamically find theses handles....
         # need to determine if all this is needed
         log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, b'\x01\x00'))
-        log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, b'\x01\x00'))
+        #log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, b'\x01\x00'))
         log.info ('Enable read handle', device.writeCharacteristic(handleRead, b'\x01\x00'))
         log.info ('Write getInfo to read handle', device.writeCharacteristic(handleRead, getInfo))
         secs = 0
