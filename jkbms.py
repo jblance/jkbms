@@ -76,8 +76,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
             else:
                 vendorID += bytes(_int.to_bytes(1, byteorder='big'))
         # consume remaining null bytes
-        while _int = record.pop(0) == 0x00:
-            pass
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
         hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
         while len(record) > 0 :
             _int = record.pop(0)
