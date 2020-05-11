@@ -127,7 +127,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         minutes = math.trunc(minutesFloat)
         secondsFloat = (minutesFloat - minutes) * 60
         seconds = math.trunc(secondsFloat)
-        print ('{}D{}H{}M{}S'.format(days, hours, minutes, seconds)
+        print ('{}D{}H{}M{}S'.format(days, hours, minutes, seconds))
 
         sys.exit()
 
