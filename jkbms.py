@@ -36,8 +36,10 @@ class jkBmsDelegate(btle.DefaultDelegate):
         if len(self.notificationData) == 300 or len(self.notificationData) == 320:
             # check the crc/checksum is correct for the record data
             crc = self.notificationData[-1:]
-            calcCrc = self.crc8(self.notificationData[:-1])
-            print(crc, calcCrc)
+            calcCrc = chr(self.crc8(self.notificationData[:-1]))
+            if crc == calcCrc:
+                return True
+        return False
 
     def decodeVolts(hexString):
         '''
@@ -130,8 +132,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # data is the data in this notification - may take multiple notifications to get all of a message
         log.debug ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
         self.notificationData += bytearray(data)
-        self.checkRecordForCompletion()
-        len(self.notificationData)
+        print (self.checkRecordForCompletion())
+        #len(self.notificationData)
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
         #print('    {}'.format(data))
