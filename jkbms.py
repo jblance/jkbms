@@ -170,31 +170,15 @@ def main():
         log.info('Connected to {}'.format(deviceName.read()))
 
         # Connect to the notify service
-        #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
         serviceNotifyUuid = 'ffe0'
         serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
-        characteristics = serviceNotify.getCharacteristics()
-        for characteristic in characteristics:
-            print('Characteristic {}, handle: {:x}, uuid: {}, properties: {}'.format(characteristic, characteristic.getHandle(), characteristic.uuid, characteristic.propertiesToString()))
 
         # Get the handles that we need to talk to
         ### Read
-        #characteristicReadUuid = '0000ffe3-0000-1000-8000-00805f9b34fb'
         characteristicReadUuid = 'ffe3'
         characteristicRead = serviceNotify.getCharacteristics(characteristicReadUuid)[0]
         handleRead = characteristicRead.getHandle()
         log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
-        ### Write
-        #characteristicWriteUuid = '0000ffe2-0000-1000-8000-00805f9b34fb'
-        #characteristicWrite = serviceNotify.getCharacteristics(characteristicWriteUuid)[0]
-        #handleWrite = characteristicWrite.getHandle()
-        #log.info ('Write characteristic: {}, handle {:x}'.format(characteristicWrite, handleWrite))
-        ### Notify
-        #characteristicNotifyUuid = '0000ffe1-0000-1000-8000-00805f9b34fb'
-        #characteristicNotify = serviceNotify.getCharacteristics(characteristicNotifyUuid)[0]
-        #handleNotify = characteristicNotify.getHandle()
-        #log.info ('Notify characteristic: {}, handle {:x}'.format(characteristicNotify, handleNotify))
-
 
         ### TODO sort below
         # Need to dynamically find theses handles....
