@@ -18,6 +18,10 @@ class jkBmsDelegate(btle.DefaultDelegate):
     '''
     BLE delegate to deal with notifications (information) from the JKBMS device
     '''
+    EXTENDED_RECORD = 1
+    CELL_DATA       = 2
+    INFO_RECORD     = 3
+
     def __init__(self, params):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
@@ -26,6 +30,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def recordIsComplete(self):
         '''
         '''
+        # check for 'ack' record
+        if self.notificationData.startswith(bytes.fromhex('aa5590eb')):
+            log.info ('notificationData has ACK')
+            self.notificationData = bytearray()
+            return False # strictly record is complete, but we dont process this
         # check record starts with 'SOR'
         SOR = bytes.fromhex('55aaeb90')
         if not self.notificationData.startswith(SOR):
@@ -43,7 +52,17 @@ class jkBmsDelegate(btle.DefaultDelegate):
         return False
 
     def processRecord(self, record):
-        print(record[4])
+        recordType = record[4]
+        counter = record[5]
+        if recordType == INFO_RECORD:
+            print('Info record')
+            pass
+        elif recordType == EXTENDED_RECORD:
+            print('Extended record')
+            pass
+        elif recordType == CELL_DATA:
+            print('Cell data record')
+            pass
 
     def decodeVolts(hexString):
         '''
