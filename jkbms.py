@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger('JKBMS-BT')
 # setup logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 # set default log levels
-log.setLevel(logging.INFO)
+log.setLevel(logging.CRITICAL)
 logging.basicConfig()
 
 import configparser
@@ -119,6 +119,7 @@ def crc8 (str):
 
 def main():
     '''
+    Main section
     '''
     # Get config from config file
     config.read('./jkbms.conf')
@@ -127,7 +128,13 @@ def main():
     if 'SETUP' in config:
         pause = config['SETUP'].getint('pause', fallback=60)
         mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
+        logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
+        log.setLevel(logging_level)
         sections.remove('SETUP')
+
+    # Process each section
+    # This might need threading?
+    # or notitfy to handle different devices?
     for section in sections:
         # print('MPP-Solar-Service: Execute - {}'.format(config[section]))
         name = section
@@ -136,7 +143,27 @@ def main():
         command = config[section].get('command')
         tag = config[section].get('tag')
         format = config[section].get('format')
-        print('Config data', name, model, mac, command, tag, format)
+        log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(name, model, mac, command, tag, format))
+        # Intialise BLE device
+        device = btle.Peripheral(None)
+        device.setDelegate( jkBmsDelegate(device) )
+        # Connect to BLE Device
+        connected = False
+        attempts = 0
+        while not connected:
+            attempts += 1
+            if attempts > maxConnectionAttempts:
+                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(name, mac, attempts))
+                sys.exit(1)
+            try:
+                device.connect(mac)
+                connected = True
+            except Exception as e:
+                continue
+        # Get the Name Service
+        deviceIDService = device.getServiceByUUID(btle.AssignedNumbers.genericAccess)
+        deviceName = deviceIDService.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
+        log.info('Connected to {}'.format(deviceName.read()))
 
 
 if __name__ == "__main__":
