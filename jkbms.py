@@ -121,6 +121,9 @@ def main():
     '''
     Main section
     '''
+    # Queries / info written to BMS to prompt responses
+    getInfo = b'\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
+    getCellInfo = b'\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
     # Get config from config file
     config.read('./jkbms.conf')
     sections = config.sections()
