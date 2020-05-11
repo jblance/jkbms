@@ -176,7 +176,7 @@ def main():
         characteristics = serviceNotify.getCharacteristics()
         for characteristic in characteristics:
             print(characteristic)
-            print(characteristic.uuid, characteristic.propertiesToString(). characteristic.getHandle())
+            print(characteristic.uuid, characteristic.propertiesToString(), characteristic.getHandle())
 
         # Get the handles that we need to talk to
         ### Read
