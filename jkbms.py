@@ -170,6 +170,7 @@ def main():
         log.info('Connected to {}'.format(deviceName.read()))
 
         services = device.getServices()
+        print(len(services))
         for service in services:
             print(service)
 
