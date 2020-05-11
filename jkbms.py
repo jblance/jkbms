@@ -54,11 +54,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
 
     def processInfoRecord(self, record):
         log.info('Processing info record')
-        print (record)
+        #print (record)
         del record[0:5]
-        print (record)
+        #print (record)
         counter = record.pop(0)
-        print (record)
+        #print (record)
         print(counter)
         vendorID = bytearray()
         hardwareVersion = bytearray()
@@ -69,12 +69,12 @@ class jkBmsDelegate(btle.DefaultDelegate):
         passcode = bytearray()
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
-            byte = record.pop(0)
-            print (byte)
-            if byte == 0x00:
+            _int = record.pop(0)
+            print (_int)
+            if _int == 0x00:
                 break
             else:
-                vendorID += byte
+                vendorID += bytes(_int.to_bytes(1, byteorder='big'))
         print (vendorID)
 
         sys.exit()
