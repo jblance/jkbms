@@ -63,7 +63,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         vendorID = bytearray()
         hardwareVersion = bytearray()
         softwareVersion = bytearray()
-        uptimeReverse = bytearray()
+        uptime = 0
         powerUpTimes = bytearray()
         deviceName = bytearray()
         passcode = bytearray()
@@ -106,19 +106,28 @@ class jkBmsDelegate(btle.DefaultDelegate):
         while _int == 0x00:
             _int = record.pop(0)
         # process uptime version
-        uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
+        upTimePos = 0
+        uptime = _int * 256**upTimePos
         while len(record) > 0 :
             _int = record.pop(0)
+            upTimePos += 1
             #print (_int)
             if _int == 0x00:
                 break
             else:
-                uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
-        uptimeReverse.reverse()
+                uptime += _int * 256**upTimePos
         print (vendorID)
         print (hardwareVersion)
         print (softwareVersion)
-        print (uptimeReverse)
+        daysFloat = uptime/(60*60*24)
+        days = math.trunc(daysFloat)
+        hoursFloat = (daysFloat - days) * 24
+        hours = math.trunc(hoursFloat)
+        minutesFloat = (hoursFloat - hours) * 60
+        minutes = math.trunc(minutesFloat)
+        secondsFloat = (minutesFloat - minutes) * 60
+        seconds = math.trunc(secondsFloat)
+        print ('{}D{}H{}M{}S'.format(days, hours, minutes, seconds)
 
         sys.exit()
 
