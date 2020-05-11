@@ -171,11 +171,13 @@ def main():
 
         # Connect to the notify service
         #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
-        serviceNotifyUuid = 'ffe0'
+        serviceNotifyUuid = 'ffe1'
         serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
-        characteristics = serviceId.getCharacteristics()
+        characteristics = serviceNotify.getCharacteristics()
         for characteristic in characteristics:
             print('Characteristic {}, handle: {:x}, uuid: {}, properties: {}'.format(characteristic, characteristic.getHandle(), characteristic.uuid, characteristic.propertiesToString()))
+        serviceNotifyUuid = 'ffe0'
+        serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
         characteristics = serviceNotify.getCharacteristics()
         for characteristic in characteristics:
             print('Characteristic {}, handle: {:x}, uuid: {}, properties: {}'.format(characteristic, characteristic.getHandle(), characteristic.uuid, characteristic.propertiesToString()))
