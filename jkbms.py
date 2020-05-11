@@ -173,15 +173,15 @@ def main():
         #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
         serviceNotifyUuid = 'ffe0'
         serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
+        characteristics = serviceNotify.getCharacteristics()
+        for chr in characteristics:
+            print(chr, chr.uuid, chr.propertiesToString(). chr.getHandle())
 
         # Get the handles that we need to talk to
         ### Read
         #characteristicReadUuid = '0000ffe3-0000-1000-8000-00805f9b34fb'
         characteristicReadUuid = 'ffe3'
-        characteristicReads = serviceNotify.getCharacteristics(characteristicReadUuid)
-        for character in characteristicReads:
-            print(character)
-        characteristicRead = characteristicReads[0]
+        characteristicRead = serviceNotify.getCharacteristics(characteristicReadUuid)[0]
         handleRead = characteristicRead.getHandle()
         log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
         ### Write
