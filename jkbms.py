@@ -25,10 +25,10 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def handleNotification(self, handle, data):
         # handle is the handle of the characteristic / descriptor that posted the notification
         # data is the data in this notification - may take multiple notifications to get all of a message
-        #print ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
-        for x in range(len(data)):
-            sys.stdout.write ('{:02x}'.format(ord(data[x])))
-        #print('    {}'.format(data))
+        print ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
+        #for x in range(len(data)):
+        #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
+        print('    {}'.format(data))
         print('')
 
 
