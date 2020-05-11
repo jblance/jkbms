@@ -37,6 +37,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             # check the crc/checksum is correct for the record data
             crc = self.notificationData[-1:]
             calcCrc = chr(self.crc8(self.notificationData[:-1]))
+            print (crc, calcCrc)
             if crc == calcCrc:
                 return True
         return False
