@@ -54,8 +54,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
 
     def processInfoRecord(self, record):
         log.info('Processing info record')
+        print (record)
         del record[0:4]
+        print (record)
         counter = record.pop()
+        print (record)
         print(counter)
         vendorID = bytearray()
         hardwareVersion = bytearray()
