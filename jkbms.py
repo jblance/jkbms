@@ -79,6 +79,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         _int = record.pop(0)
         while _int == 0x00:
             _int = record.pop(0)
+        # process hardware version
         hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
         while len(record) > 0 :
             _int = record.pop(0)
@@ -87,8 +88,35 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 break
             else:
                 hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
+        # consume remaining null bytes
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
+        # process software version
+        softwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
+        while len(record) > 0 :
+            _int = record.pop(0)
+            #print (_int)
+            if _int == 0x00:
+                break
+            else:
+                softwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
+        # consume remaining null bytes
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
+        uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
+        while len(record) > 0 :
+            _int = record.pop(0)
+            #print (_int)
+            if _int == 0x00:
+                break
+            else:
+                uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
         print (vendorID)
         print (hardwareVersion)
+        print (softwareVersion)
+        print (uptimeReverse)
 
         sys.exit()
 
