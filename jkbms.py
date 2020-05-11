@@ -66,7 +66,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         passcode = bytearray()
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
-            byte = (record.pop())
+            byte = record.pop()
             if byte == 0x00:
                 break
             else:
