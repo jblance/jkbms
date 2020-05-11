@@ -57,7 +57,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         print (record)
         del record[0:5]
         print (record)
-        counter = record.pop()
+        counter = record.pop(0)
         print (record)
         print(counter)
         vendorID = bytearray()
@@ -69,7 +69,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         passcode = bytearray()
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
-            byte = record.pop()
+            byte = record.pop(0)
             print (byte)
             if byte == 0x00:
                 break
