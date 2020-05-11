@@ -117,9 +117,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 break
             else:
                 uptime += _int * 256**upTimePos
-        print (vendorID)
-        print (hardwareVersion)
-        print (softwareVersion)
+        print ('VendorID:', vendorID.decode('utf-8'))
+        print ('Hardware Version:', hardwareVersion.decode('utf-8'))
+        print ('Software Version:', softwareVersion.decode('utf-8'))
         daysFloat = uptime/(60*60*24)
         days = math.trunc(daysFloat)
         hoursFloat = (daysFloat - days) * 24
