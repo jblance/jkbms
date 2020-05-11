@@ -114,10 +114,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 break
             else:
                 uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
+        uptimeReverse.reverse()
         print (vendorID)
         print (hardwareVersion)
         print (softwareVersion)
-        print (uptimeReverse.reverse())
+        print (uptimeReverse)
 
         sys.exit()
 
