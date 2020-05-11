@@ -167,10 +167,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #print('    {}'.format(data))
         #print('')
 
-
-
-
-
 def main():
     '''
     Main section
