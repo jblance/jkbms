@@ -67,6 +67,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
             byte = record.pop()
+            print (byte)
             if byte == 0x00:
                 break
             else:
