@@ -35,8 +35,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # check that length one of the valid lengths (300, 320)
         if len(self.notificationData) == 300 or len(self.notificationData) == 320:
             # check the crc/checksum is correct for the record data
-            crc = self.notificationData[-1:]
-            calcCrc = chr(self.crc8(self.notificationData[:-1]))
+            crc = ord(self.notificationData[-1:])
+            calcCrc = self.crc8(self.notificationData[:-1])
             print (crc, calcCrc)
             if crc == calcCrc:
                 return True
