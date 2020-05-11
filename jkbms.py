@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+from bluepy import btle
 
 import logging
 log = logging.getLogger('JKBMS-BT')
