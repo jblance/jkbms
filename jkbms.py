@@ -169,7 +169,7 @@ def main():
         deviceName = serviceId.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
         log.info('Connected to {}'.format(deviceName.read()))
 
-        services = device.getServices()
+        services = device.getDescriptors()
         print(len(services))
         for service in services:
             print(service)
