@@ -23,18 +23,21 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # extra initialisation here
         self.notificationData = bytearray()
 
-    def checkRecordForCompletion(self, record):
+    def checkRecordForCompletion(self):
         '''
         '''
-        isComplete = False
         # check record starts with 'SOR'
         SOR = bytes.fromhex('55aaeb90')
-        if record.startswith(SOR):
-            print ('SOR found')
-        else:
-            print ('No SOR')
+        if not self.notificationData.startswith(SOR):
+            log.info ('No SOR found in notificationData')
+            self.notificationData = bytearray()
+            return False
         # check that length one of the valid lengths (300, 320)
-        # check the crc/checksum is correct for the record data
+        if len(self.notificationData) == 300 or len(self.notificationData) == 320:
+            # check the crc/checksum is correct for the record data
+            crc = self.notificationData[-2:0]
+            calcCrc = self.crc8(self.notificationData[:-2])
+            print(crc, calcCrc)
 
     def decodeVolts(hexString):
         '''
@@ -109,7 +112,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.debug ('step6', step6)
         return volts
 
-    def crc8 (str):
+    def crc8 (self, str):
         '''
         Generate 8 bit CRC of supplied string
         '''
@@ -125,7 +128,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # data is the data in this notification - may take multiple notifications to get all of a message
         log.debug ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
         self.notificationData += bytearray(data)
-        self.checkRecordForCompletion(self.notificationData)
+        self.checkRecordForCompletion()
         len(self.notificationData)
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
