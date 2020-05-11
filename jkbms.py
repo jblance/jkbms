@@ -12,7 +12,7 @@ logging.basicConfig()
 import configparser
 config = configparser.ConfigParser()
 
-notificationData = ''
+
 
 class jkBmsDelegate(btle.DefaultDelegate):
     '''
@@ -21,13 +21,14 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def __init__(self, params):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
+        self.notificationData = ''
 
     def handleNotification(self, handle, data):
         # handle is the handle of the characteristic / descriptor that posted the notification
         # data is the data in this notification - may take multiple notifications to get all of a message
         print ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
-        notificationData += data
-        print('data len {}'.format(len(data)))
+        self.notificationData += data
+        print('notificationData len {}'.format(len(self.notificationData)))
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
         #print('    {}'.format(data))
