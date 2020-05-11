@@ -35,8 +35,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # check that length one of the valid lengths (300, 320)
         if len(self.notificationData) == 300 or len(self.notificationData) == 320:
             # check the crc/checksum is correct for the record data
-            crc = self.notificationData[-2:0]
-            calcCrc = self.crc8(self.notificationData[:-2])
+            crc = self.notificationData[-1:]
+            calcCrc = self.crc8(self.notificationData[:-1])
             print(crc, calcCrc)
 
     def decodeVolts(hexString):
@@ -120,7 +120,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #for j in range(0, len(str),2):
         for b in byteData:
             #char = int(str[j:j+2], 16)
-            print (b)
+            #print (b)
             CRC = CRC + b
             CRC &= 0xff
         return CRC
