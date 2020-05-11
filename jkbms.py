@@ -126,7 +126,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # data is the data in this notification - may take multiple notifications to get all of a message
         log.debug ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
         self.notificationData += bytearray(data)
-        checkRecordForCompletion(self.notificationData)
+        self.checkRecordForCompletion(self.notificationData)
         len(self.notificationData)
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
