@@ -70,12 +70,24 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
             _int = record.pop(0)
-            print (_int)
+            #print (_int)
             if _int == 0x00:
                 break
             else:
                 vendorID += bytes(_int.to_bytes(1, byteorder='big'))
+        # consume remaining null bytes
+        while _int = record.pop(0) == 0x00:
+            pass
+        hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
+        while len(record) > 0 :
+            _int = record.pop(0)
+            #print (_int)
+            if _int == 0x00:
+                break
+            else:
+                hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
         print (vendorID)
+        print (hardwareVersion)
 
         sys.exit()
 
