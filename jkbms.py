@@ -169,6 +169,10 @@ def main():
         deviceName = serviceId.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
         log.info('Connected to {}'.format(deviceName.read()))
 
+        services = device.getServices()
+        for service in services:
+            print(service)
+
         # Connect to the notify service
         #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
         characteristics = serviceId.getCharacteristics('ffe1')
