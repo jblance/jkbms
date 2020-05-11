@@ -52,12 +52,29 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 return True
         return False
 
+    def processInfoRecord(self, record):
+        log.info('Processing info record')
+        del record[0:4]
+        counter = record.pop()
+        print(counter)
+        vendorID = bytearray()
+        hardwareVersion = bytearray()
+        softwareVersion = bytearray()
+        uptimeReverse = bytearray()
+        powerUpTimes = bytearray()
+        deviceName = bytearray()
+        passcode = bytearray()
+        # start at byte 7, go till 0x00 for device model
+        while len(record) > 0 :
+            print (record.pop())
+
+        sys.exit()
+
     def processRecord(self, record):
         recordType = record[4]
         counter = record[5]
         if recordType == INFO_RECORD:
-            print('Info record')
-            pass
+            self.processInfoRecord(record)
         elif recordType == EXTENDED_RECORD:
             print('Extended record')
             pass
