@@ -105,6 +105,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         _int = record.pop(0)
         while _int == 0x00:
             _int = record.pop(0)
+        # process uptime version
         uptimeReverse += bytes(_int.to_bytes(1, byteorder='big'))
         while len(record) > 0 :
             _int = record.pop(0)
@@ -116,7 +117,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         print (vendorID)
         print (hardwareVersion)
         print (softwareVersion)
-        print (uptimeReverse)
+        print (len(uptimeReverse))
 
         sys.exit()
 
