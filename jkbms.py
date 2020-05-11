@@ -154,18 +154,70 @@ def main():
         while not connected:
             attempts += 1
             if attempts > max_connection_attempts:
-                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(name, mac, attempts))
+                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(name, mac, attempts - 1))
                 sys.exit(1)
             try:
                 device.connect(mac)
                 connected = True
             except Exception as e:
                 continue
-        # Get the Name Service
-        deviceIDService = device.getServiceByUUID(btle.AssignedNumbers.genericAccess)
-        deviceName = deviceIDService.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
+        # Get the device name
+        serviceId = device.getServiceByUUID(btle.AssignedNumbers.genericAccess)
+        deviceName = serviceId.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
         log.info('Connected to {}'.format(deviceName.read()))
 
+        # Connect to the notify service
+        #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
+        serviceNotifyUuid = 'ffe0'
+        serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
+
+        # Get the handles that we need to talk to
+        ### Read
+        characteristicReadUuid = '0000ffe3-0000-1000-8000-00805f9b34fb'
+        characteristicRead = serviceNotify.getCharacteristics(characteristicReadUuid)[0]
+        handleRead = characteristicRead.getHandle()
+        log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
+        ### Write
+        characteristicWriteUuid = '0000ffe2-0000-1000-8000-00805f9b34fb'
+        characteristicWrite = serviceNotify.getCharacteristics(characteristicWriteUuid)[0]
+        handleWrite = characteristicWrite.getHandle()
+        log.info ('Write characteristic: {}, handle {:x}'.format(characteristicWrite, handleWrite))
+        ### Notify
+        characteristicNotifyUuid = '0000ffe1-0000-1000-8000-00805f9b34fb'
+        characteristicNotify = serviceNotify.getCharacteristics(characteristicNotifyUuid)[0]
+        handleNotify = characteristicNotify.getHandle()
+        log.info ('Notify characteristic: {}, handle {:x}'.format(characteristicNotify, handleNotify))
+
+
+        ### TODO sort below
+        # Need to dynamically find theses handles....
+        # need to determine if all this is needed
+        log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, '\x01\x00'))
+        log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, '\x01\x00'))
+        log.info ('Enable read handle', device.writeCharacteristic(handleRead, '\x01\x00'))
+        log.info ('Write getInfo to read handle', device.writeCharacteristic(handleRead, getInfo))
+        secs = 0
+        while True:
+            if device.waitForNotifications(1.0):
+                continue
+            secs += 1
+            if secs > 20:
+                break
+
+        log.info ('Write getCellInfo to read handle', device.writeCharacteristic(handleRead, getCellInfo))
+        loops = 0
+        recordsToGrab = 20
+        log.info ('Grabbing {} records (after inital response)'.format(recordsToGrab))
+
+        while True:
+            loops += 1
+            if loops > recordsToGrab * 15 + 16:
+                break
+            if device.waitForNotifications(1.0):
+                continue
+
+        log.info ('Disconnecting...')
+        device.disconnect()
 
 if __name__ == "__main__":
     # execute only if run as a script and python3
