@@ -175,8 +175,7 @@ def main():
         serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
         characteristics = serviceNotify.getCharacteristics()
         for characteristic in characteristics:
-            print(characteristic)
-            print(characteristic.uuid, characteristic.propertiesToString(), characteristic.getHandle())
+            print('Characteristic {}, handle: {:x}}, uuid: {}, properties: {}'.format(characteristic, characteristic.getHandle(), characteristic.uuid, characteristic.propertiesToString()))
 
         # Get the handles that we need to talk to
         ### Read
