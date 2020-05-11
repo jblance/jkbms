@@ -12,7 +12,7 @@ logging.basicConfig()
 import configparser
 config = configparser.ConfigParser()
 
-# notificationData = ''
+notificationData = ''
 
 class jkBmsDelegate(btle.DefaultDelegate):
     '''
@@ -26,10 +26,12 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # handle is the handle of the characteristic / descriptor that posted the notification
         # data is the data in this notification - may take multiple notifications to get all of a message
         print ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
+        notificationData += data
+        print('data len {}'.format(len(data)))
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
-        print('    {}'.format(data))
-        print('')
+        #print('    {}'.format(data))
+        #print('')
 
 
 def decodeVolts(hexString):
@@ -181,10 +183,8 @@ def main():
         log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
 
         ### TODO sort below
-        # Need to dynamically find theses handles....
-        # need to determine if all this is needed
+        # Need to dynamically find this handle....
         log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, b'\x01\x00'))
-        #log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, b'\x01\x00'))
         log.info ('Enable read handle', device.writeCharacteristic(handleRead, b'\x01\x00'))
         log.info ('Write getInfo to read handle', device.writeCharacteristic(handleRead, getInfo))
         secs = 0
