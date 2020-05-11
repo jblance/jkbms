@@ -192,9 +192,9 @@ def main():
         ### TODO sort below
         # Need to dynamically find theses handles....
         # need to determine if all this is needed
-        log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, '\x01\x00'))
-        log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, '\x01\x00'))
-        log.info ('Enable read handle', device.writeCharacteristic(handleRead, '\x01\x00'))
+        log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, b'\x01\x00'))
+        log.info ('Enable 0x0e handle', device.writeCharacteristic(0x0e, b'\x01\x00'))
+        log.info ('Enable read handle', device.writeCharacteristic(handleRead, b'\x01\x00'))
         log.info ('Write getInfo to read handle', device.writeCharacteristic(handleRead, getInfo))
         secs = 0
         while True:
