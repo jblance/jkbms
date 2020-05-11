@@ -117,7 +117,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         print (vendorID)
         print (hardwareVersion)
         print (softwareVersion)
-        print (len(uptimeReverse))
+        print (uptimeReverse.reverse())
 
         sys.exit()
 
