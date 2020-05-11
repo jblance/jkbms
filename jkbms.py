@@ -28,7 +28,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         '''
         isComplete = False
         # check record starts with 'SOR'
-        SOR = '55aaeb90'
+        SOR = bytes.fromhex('55aaeb90')
         if record.startswith(SOR):
             print ('SOR found')
         else:
