@@ -23,7 +23,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # extra initialisation here
         self.notificationData = bytearray()
 
-    def checkRecordForCompletion(record):
+    def checkRecordForCompletion(self, record):
         '''
         '''
         isComplete = False
@@ -108,7 +108,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.debug ('step5', step5)
         log.debug ('step6', step6)
         return volts
-
 
     def crc8 (str):
         '''
