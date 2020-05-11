@@ -23,7 +23,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # extra initialisation here
         self.notificationData = bytearray()
 
-    def checkRecordForCompletion(self):
+    def recordIsComplete(self):
         '''
         '''
         # check record starts with 'SOR'
@@ -41,6 +41,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
             if crc == calcCrc:
                 return True
         return False
+
+    def processRecord(self, record):
+        print(record[3])
 
     def decodeVolts(hexString):
         '''
@@ -133,7 +136,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # data is the data in this notification - may take multiple notifications to get all of a message
         log.debug ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
         self.notificationData += bytearray(data)
-        print (self.checkRecordForCompletion())
+        if self.recordIsComplete():
+            record = self.notificationData
+            self.notificationData = bytearray()
+            self.processRecord(record)
+
         #len(self.notificationData)
         #for x in range(len(data)):
         #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
