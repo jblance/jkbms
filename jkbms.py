@@ -112,14 +112,16 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.debug ('step6', step6)
         return volts
 
-    def crc8 (self, str):
+    def crc8 (self, byteData):
         '''
         Generate 8 bit CRC of supplied string
         '''
         CRC = 0
-        for j in range(0, len(str),2):
-            char = int(str[j:j+2], 16)
-            CRC = CRC + char
+        #for j in range(0, len(str),2):
+        for b in byteData:
+            #char = int(str[j:j+2], 16)
+            print (b)
+            CRC = CRC + b
             CRC &= 0xff
         return CRC
 
