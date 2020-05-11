@@ -55,7 +55,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def processInfoRecord(self, record):
         log.info('Processing info record')
         print (record)
-        del record[0:4]
+        del record[0:5]
         print (record)
         counter = record.pop()
         print (record)
