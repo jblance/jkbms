@@ -129,6 +129,7 @@ def main():
         pause = config['SETUP'].getint('pause', fallback=60)
         mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
         logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
+        max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
         log.setLevel(logging_level)
         sections.remove('SETUP')
 
@@ -152,7 +153,7 @@ def main():
         attempts = 0
         while not connected:
             attempts += 1
-            if attempts > maxConnectionAttempts:
+            if attempts > max_connection_attempts:
                 log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(name, mac, attempts))
                 sys.exit(1)
             try:
