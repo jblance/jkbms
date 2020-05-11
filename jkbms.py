@@ -1,11 +1,34 @@
 #!/usr/bin/env python3
 import sys
+
 import logging
 log = logging.getLogger('JKBMS-BT')
 # setup logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 # set default log levels
 log.setLevel(logging.INFO)
 logging.basicConfig()
+
+import configparser
+config = configparser.ConfigParser()
+
+# notificationData = ''
+
+class jkBmsDelegate(btle.DefaultDelegate):
+    '''
+    BLE delegate to deal with notifications (information) from the JKBMS device
+    '''
+    def __init__(self, params):
+        btle.DefaultDelegate.__init__(self)
+        # extra initialisation here
+
+    def handleNotification(self, handle, data):
+        # handle is the handle of the characteristic / descriptor that posted the notification
+        # data is the data in this notification - may take multiple notifications to get all of a message
+        #print ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
+        for x in range(len(data)):
+            sys.stdout.write ('{:02x}'.format(ord(data[x])))
+        #print('    {}'.format(data))
+        print('')
 
 
 def decodeVolts(hexString):
@@ -92,8 +115,37 @@ def crc8 (str):
         CRC &= 0xff
     return CRC
 
-print ('Hit <ENTER> to disconnect')
-print (sys.version_info)
+
+def main():
+    '''
+    '''
+    # Get config from config file
+    config.read('./jkbms.conf')
+    sections = config.sections()
+
+    if 'SETUP' in config:
+        pause = config['SETUP'].getint('pause', fallback=60)
+        mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
+        sections.remove('SETUP')
+    for section in sections:
+        # print('MPP-Solar-Service: Execute - {}'.format(config[section]))
+        name = section
+        model = config[section].get('model')
+        mac = config[section].get('mac')
+        command = config[section].get('command')
+        tag = config[section].get('tag')
+        format = config[section].get('format')
+        print('Config data', name, model, mac, command, tag, format)
+
+
+if __name__ == "__main__":
+    # execute only if run as a script and python3
+    if sys.version_info < (3,0):
+        print ('Python3 required')
+        sys.exit(1)
+    main()
+
+#print ('Hit <ENTER> to disconnect')
 #if (sys.version_info > (3, 0)):
 #    input()
 #else:
