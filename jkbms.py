@@ -173,6 +173,7 @@ def main():
         print(len(services))
         for service in services:
             print(service)
+            print(service.getHandle())
 
         # Connect to the notify service
         #notifyServiceUuid = '0000ffe0-0000-1000-8000-00805f9b34fb'
