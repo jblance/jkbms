@@ -41,6 +41,7 @@ if byte1 == 0x0:
     sys.exit(0)
 byte1Low = byte1 - 0x40
 answer = (2**(byte1Low*2))*2
+log.info('Starting point: {}'.format(answer))
 step1 = answer / 8.0
 step2 = answer / 128.0
 step3 = answer / 2048.0
