@@ -60,14 +60,14 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #print (record)
         counter = record.pop(0)
         #print (record)
-        print(counter)
+        log.info ('Record number: ', counter)
         vendorID = bytearray()
         hardwareVersion = bytearray()
         softwareVersion = bytearray()
         uptime = 0
-        powerUpTimes = bytearray()
+        powerUpTimes = 0
         deviceName = bytearray()
-        passcode = bytearray()
+        passCode = bytearray()
         # start at byte 7, go till 0x00 for device model
         while len(record) > 0 :
             _int = record.pop(0)
@@ -117,9 +117,44 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 break
             else:
                 uptime += _int * 256**upTimePos
-        print ('VendorID:', vendorID.decode('utf-8'))
-        print ('Hardware Version:', hardwareVersion.decode('utf-8'))
-        print ('Software Version:', softwareVersion.decode('utf-8'))
+        # consume remaining null bytes
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
+        # power up times
+        powerUpTimes = _int
+        # consume remaining null bytes
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
+        # device name
+        deviceName += bytes(_int.to_bytes(1, byteorder='big'))
+        while len(record) > 0 :
+            _int = record.pop(0)
+            #print (_int)
+            if _int == 0x00:
+                break
+            else:
+                deviceName += bytes(_int.to_bytes(1, byteorder='big'))
+        # consume remaining null bytes
+        _int = record.pop(0)
+        while _int == 0x00:
+            _int = record.pop(0)
+        # Passcode
+        passCode += bytes(_int.to_bytes(1, byteorder='big'))
+        while len(record) > 0 :
+            _int = record.pop(0)
+            #print (_int)
+            if _int == 0x00:
+                break
+            else:
+                passCode += bytes(_int.to_bytes(1, byteorder='big'))
+
+        log.info ('VendorID:', deviceName.decode('utf-8'))
+        log.info ('Device Name:', vendorID.decode('utf-8'))
+        log.info ('Pass Code:', passCode.decode('utf-8'))
+        log.info ('Hardware Version:', hardwareVersion.decode('utf-8'))
+        log.info ('Software Version:', softwareVersion.decode('utf-8'))
         daysFloat = uptime/(60*60*24)
         days = math.trunc(daysFloat)
         hoursFloat = (daysFloat - days) * 24
@@ -128,7 +163,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         minutes = math.trunc(minutesFloat)
         secondsFloat = (minutesFloat - minutes) * 60
         seconds = math.trunc(secondsFloat)
-        print ('{}D{}H{}M{}S'.format(days, hours, minutes, seconds))
+        log.info ('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
 
         sys.exit()
 
