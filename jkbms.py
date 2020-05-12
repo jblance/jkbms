@@ -215,6 +215,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #    log.warning('Hex out of bounds - position 6 != 4: ', hexString[6])
         # interprete as int & get bottom 4 bits
         #byte1 = int(hexString[6:8], 16)
+        if byte1 == 0x0:
+            return volts
         byte1 = hexString[3]
         byte1Low = byte1 & 0xf
         volts = (2**(byte1Low*2))*2
