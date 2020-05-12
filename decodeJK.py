@@ -41,7 +41,7 @@ if byte1 == 0x0:
     sys.exit(0)
 byte1Low = byte1 - 0x40
 answer = (2**(byte1Low*2))*2
-log.info('Starting point: {}'.format(answer))
+log.info('After position 3: {}'.format(answer))
 step1 = answer / 8.0
 step2 = answer / 128.0
 step3 = answer / 2048.0
@@ -57,18 +57,19 @@ if byte2High & 8:
     answer += (byte2High * step1 * 2) + (byte2Low * step2)
 else:
     answer += (byte2High * step1) + (byte2Low * step2)
-
+log.info('After position 2: {}'.format(answer))
 # position 1
 byte3 = hexString[1]
 byte3High = byte3 >> 4
 byte3Low = byte3 & 0xf
 answer += (byte3High * step3) + (byte3Low * step4)
-
+log.info('After position 1: {}'.format(answer))
 # position 0
 byte4 = hexString[0]
 byte4High = byte4 >> 4
 byte4Low = byte4 & 0xf
 answer += (byte4High * step5) + (byte4Low * step6)
+log.info('After position 0: {}'.format(answer))
 
 log.debug ('hexString: {}'.format(hexString))
 log.debug ('hex(byte1): {}'.format(hex(byte1)))
