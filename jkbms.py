@@ -182,7 +182,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         for i in range(0, number*size, size):
             volts.append(record[0+i:size+i])
         for cell, volt in enumerate(volts):
-            log.info ('Cell: {}, Volts: {:.4f}'.format(cell, self.decodeVolts(volt)))
+            log.info ('Cell: {}, Volts: {:.4f}'.format(cell, self.decodeHex(volt)))
 
     def processRecord(self, record):
         recordType = record[4]
@@ -196,60 +196,52 @@ class jkBmsDelegate(btle.DefaultDelegate):
         else:
             log.info('Unknown record type')
 
-    def decodeVolts(self, hexString):
+    def decodeHex(self, hexString):
         '''
         # For bluetooth battery monitor (model JK-B1A24S)
         # - which encodes cell voltages into 4 bytes (hex encoded)
         # - example 5f806240 -> 3.539
         '''
-        volts = 0.0
+        answer = 0.0
 
         # Make sure supplied String is long enough
         if len(hexString) != 4:
             log.warning('Hex encoded value must be 4 bytes long. Was {} length'.format(len(hexString)))
             return None
 
-        # Process most significant byte (position 6,7)
-        # valid values are 0x40 - 0x4f (normally 0x40 for LiPo cells
-        #if hexString[6] != '4':
-        #    log.warning('Hex out of bounds - position 6 != 4: ', hexString[6])
-        # interprete as int & get bottom 4 bits
-        #byte1 = int(hexString[6:8], 16)
+        # Process most significant byte (position 3)
         byte1 = hexString[3]
         if byte1 == 0x0:
-            return volts
-        byte1Low = byte1 & 0xf
-        volts = (2**(byte1Low*2))*2
-        step1 = volts / 8.0
-        step2 = volts / 128.0
-        step3 = volts / 2048.0
-        step4 = volts / 32768.0
-        step5 = volts / 524288.0
-        step6 = volts / 8388608.0
+            return answer
+        byte1Low = 0x40 - byte1
+        answer = (2**(byte1Low*2))*2
+        step1 = answer / 8.0
+        step2 = answer / 128.0
+        step3 = answer / 2048.0
+        step4 = answer / 32768.0
+        step5 = answer / 524288.0
+        step6 = answer / 8388608.0
 
-        # position 4,5
-        #byte2 = int(hexString[4:6], 16)
+        # position 2
         byte2 = hexString[2]
         byte2High = byte2 >> 4
         byte2Low = byte2 & 0xf
         if byte2High & 8:
-            volts += (byte2High * step1 * 2) + (byte2Low * step2)
+            answer += (byte2High * step1 * 2) + (byte2Low * step2)
         else:
-            volts += (byte2High * step1) + (byte2Low * step2)
+            answer += (byte2High * step1) + (byte2Low * step2)
 
-        # position 2,3
-        #byte3 = int(hexString[2:4], 16)
+        # position 1
         byte3 = hexString[1]
         byte3High = byte3 >> 4
         byte3Low = byte3 & 0xf
-        volts += (byte3High * step3) + (byte3Low * step4)
+        answer += (byte3High * step3) + (byte3Low * step4)
 
-        # position 0,1
-        #byte4 = int(hexString[0:2], 16)
+        # position 0
         byte4 = hexString[0]
         byte4High = byte4 >> 4
         byte4Low = byte4 & 0xf
-        volts += (byte4High * step5) + (byte4Low * step6)
+        answer += (byte4High * step5) + (byte4Low * step6)
 
         log.debug ('hexString: {}'.format(hexString))
         log.debug ('hex(byte1): {}'.format(hex(byte1)))
@@ -273,7 +265,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.debug ('step4: {}'.format(step4))
         log.debug ('step5: {}'.format(step5))
         log.debug ('step6: {}'.format(step6))
-        return volts
+        return answer
 
     def crc8 (self, byteData):
         '''
