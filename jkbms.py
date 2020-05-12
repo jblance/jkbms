@@ -216,9 +216,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # interprete as int & get bottom 4 bits
         #byte1 = int(hexString[6:8], 16)
         byte1 = hexString[3]
-        log.debug ('hexString: {}'.format(hexString))
-        log.debug ('byte1: {}'.format(byte1))
-
         byte1Low = byte1 & 0xf
         volts = (2**(byte1Low*2))*2
         step1 = volts / 8.0
@@ -229,7 +226,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         step6 = volts / 8388608.0
 
         # position 4,5
-        byte2 = int(hexString[4:6], 16)
+        #byte2 = int(hexString[4:6], 16)
+        byte2 = hexString[2]
         byte2High = byte2 >> 4
         byte2Low = byte2 & 0xf
         if byte2High & 8:
@@ -238,13 +236,15 @@ class jkBmsDelegate(btle.DefaultDelegate):
             volts += (byte2High * step1) + (byte2Low * step2)
 
         # position 2,3
-        byte3 = int(hexString[2:4], 16)
+        #byte3 = int(hexString[2:4], 16)
+        byte3 = hexString[1]
         byte3High = byte3 >> 4
         byte3Low = byte3 & 0xf
         volts += (byte3High * step3) + (byte3Low * step4)
 
         # position 0,1
-        byte4 = int(hexString[0:2], 16)
+        #byte4 = int(hexString[0:2], 16)
+        byte4 = hexString[0]
         byte4High = byte4 >> 4
         byte4Low = byte4 & 0xf
         volts += (byte4High * step5) + (byte4Low * step6)
