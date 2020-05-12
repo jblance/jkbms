@@ -60,7 +60,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #print (record)
         counter = record.pop(0)
         #print (record)
-        log.info ('Record number: ', counter)
+        log.info ('Record number: {}'.format(counter))
         vendorID = bytearray()
         hardwareVersion = bytearray()
         softwareVersion = bytearray()
