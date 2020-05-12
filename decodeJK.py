@@ -26,7 +26,7 @@ elif(args.enableInfo):
     log.setLevel(logging.INFO)
     # ch.setLevel(logging.INFO)
 
-hexString = args.hex
+hexString = bytes.fromhex(args.hex)
 
 answer = 0.0
 
