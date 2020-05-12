@@ -15,7 +15,7 @@ from argparse import ArgumentParser
 parser = ArgumentParser(description='JK Hex Decode Utility')
 parser.add_argument('-x', '--hex', help='Hex to decode', default='8acdbd3d')
 parser.add_argument('-D', '--enableDebug', action='store_true', help='Enable Debug and above (i.e. all) messages')
-arser.add_argument('-I', '--enableInfo', action='store_true', help='Enable Info and above level messages')
+parser.add_argument('-I', '--enableInfo', action='store_true', help='Enable Info and above level messages')
 args = parser.parse_args()
 
 # Turn on debug if needed
