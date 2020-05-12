@@ -181,7 +181,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         number = 24
         for i in range(0, number*size, size):
             volts.append(record[0+i:size+i])
-        print(volts)
+        for volt in volts:
+            print ('Volts: {}'.format(decodeVolts(volt)))
 
     def processRecord(self, record):
         recordType = record[4]
@@ -195,7 +196,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         else:
             log.info('Unknown record type')
 
-    def decodeVolts(hexString):
+    def decodeVolts(self, hexString):
         '''
         # For bluetooth battery monitor (model JK-B1A24S)
         # - which encodes cell voltages into 4 bytes (hex encoded)
