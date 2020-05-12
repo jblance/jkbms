@@ -182,7 +182,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         for i in range(0, number*size, size):
             volts.append(record[0+i:size+i])
         for volt in volts:
-            print ('Volts: {}'.format(len(volt)))
+            print ('Volts: {}'.format(self.decodeVolts(volt)))
 
     def processRecord(self, record):
         recordType = record[4]
@@ -205,14 +205,14 @@ class jkBmsDelegate(btle.DefaultDelegate):
         volts = 0.0
 
         # Make sure supplied String is long enough
-        if len(hexString) != 8:
-            log.warning('Hex encoded value must be 4 bytes long')
+        if len(hexString) != 4:
+            log.warning('Hex encoded value must be 4 bytes long. Was {} length'.format(len(hexString)))
             return None
 
         # Process most significant byte (position 6,7)
         # valid values are 0x40 - 0x4f (normally 0x40 for LiPo cells
-        if hexString[6] != '4':
-            log.warning('Hex out of bounds - position 6 != 4: ', hexString[6])
+        #if hexString[6] != '4':
+        #    log.warning('Hex out of bounds - position 6 != 4: ', hexString[6])
         # interprete as int & get bottom 4 bits
         byte1 = int(hexString[6:8], 16)
         byte1Low = byte1 & 0xf
