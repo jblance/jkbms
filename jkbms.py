@@ -165,7 +165,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
         seconds = math.trunc(secondsFloat)
         log.info ('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
 
-
     def processExtendedRecord(self, record):
         log.info('Processing extended record')
         del record[0:5]
@@ -177,6 +176,12 @@ class jkBmsDelegate(btle.DefaultDelegate):
         del record[0:5]
         counter = record.pop(0)
         log.info ('Record number: {}'.format(counter))
+        volts = []
+        size = 4
+        number = 24
+        for i in range(0, number*size, size):
+            volts.append(record[0+i:size+i])
+        print(volts)
 
     def processRecord(self, record):
         recordType = record[4]
@@ -239,28 +244,28 @@ class jkBmsDelegate(btle.DefaultDelegate):
         byte4Low = byte4 & 0xf
         volts += (byte4High * step5) + (byte4Low * step6)
 
-        log.debug ('hexString', hexString)
-        log.debug ('hex(byte1)', hex(byte1))
-        log.debug ('byte1Low', byte1Low)
+        log.debug ('hexString: {}'.format(hexString))
+        log.debug ('hex(byte1): {}'.format(hex(byte1)))
+        log.debug ('byte1Low: {}'.format(byte1Low))
         #log.debug ('byte2', byte2)
-        log.debug ('hex(byte2)', hex(byte2))
-        log.debug ('byte2High', byte2High)
-        log.debug ('byte2Low', byte2Low)
+        log.debug ('hex(byte2): {}'.format(hex(byte2)))
+        log.debug ('byte2High: {}'.format(byte2High))
+        log.debug ('byte2Low: {}'.format(byte2Low))
         #log.debug ('byte3', byte3)
-        log.debug ('hex(byte3)', hex(byte3))
-        log.debug ('byte3High', byte3High)
-        log.debug ('byte3Low', byte3Low)
+        log.debug ('hex(byte3): {}'.format(hex(byte3)))
+        log.debug ('byte3High: {}'.format(byte3High))
+        log.debug ('byte3Low: {}'.format(byte3Low))
         #log.debug ('byte4', byte4)
-        log.debug ('hex(byte4)', hex(byte4))
-        log.debug ('byte4High', byte4High)
-        log.debug ('byte4Low', byte4Low)
+        log.debug ('hex(byte4): {}'.format(hex(byte4)))
+        log.debug ('byte4High: {}'.format(byte4High))
+        log.debug ('byte4Low: {}'.format(byte4Low))
 
-        log.debug ('step1', step1)
-        log.debug ('step2', step2)
-        log.debug ('step3', step3)
-        log.debug ('step4', step4)
-        log.debug ('step5', step5)
-        log.debug ('step6', step6)
+        log.debug ('step1: {}'.format(step1))
+        log.debug ('step2: {}'.format(step2))
+        log.debug ('step3: {}'.format(step3))
+        log.debug ('step4: {}'.format(step4))
+        log.debug ('step5: {}'.format(step5))
+        log.debug ('step6: {}'.format(step6))
         return volts
 
     def crc8 (self, byteData):
