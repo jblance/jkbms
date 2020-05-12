@@ -358,7 +358,7 @@ def main():
             if device.waitForNotifications(1.0):
                 continue
             secs += 1
-            if secs > 20:
+            if secs > 5 :
                 break
 
         log.info ('Write getCellInfo to read handle', device.writeCharacteristic(handleRead, getCellInfo))
