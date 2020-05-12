@@ -150,8 +150,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
             else:
                 passCode += bytes(_int.to_bytes(1, byteorder='big'))
 
-        log.info ('VendorID: {}'.format(deviceName.decode('utf-8')))
-        log.info ('Device Name: {}'.format(vendorID.decode('utf-8')))
+        log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
+        log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
         log.info ('Pass Code: {}'.format(passCode.decode('utf-8')))
         log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
         log.info ('Software Version: {}'.format(softwareVersion.decode('utf-8')))
@@ -165,7 +165,12 @@ class jkBmsDelegate(btle.DefaultDelegate):
         seconds = math.trunc(secondsFloat)
         log.info ('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
 
-        sys.exit()
+
+    def processExtendedRecord(self, record):
+        log.info('Processing extended record')
+        del record[0:5]
+        counter = record.pop(0)
+        log.info ('Record number: {}'.format(counter))
 
     def processRecord(self, record):
         recordType = record[4]
@@ -173,8 +178,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         if recordType == INFO_RECORD:
             self.processInfoRecord(record)
         elif recordType == EXTENDED_RECORD:
-            print('Extended record')
-            pass
+            self.processExtendedRecord(record)
         elif recordType == CELL_DATA:
             print('Cell data record')
             pass
