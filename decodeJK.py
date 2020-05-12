@@ -18,12 +18,12 @@ answer = 0.0
 # Make sure supplied String is long enough
 if len(hexString) != 4:
     log.warning('Hex encoded value must be 4 bytes long. Was {} length'.format(len(hexString)))
-    return None
+    sys.exit(1)
 
 # Process most significant byte (position 3)
 byte1 = hexString[3]
 if byte1 == 0x0:
-    return answer
+    sys.exit(0)
 byte1Low = byte1 - 0x40
 answer = (2**(byte1Low*2))*2
 step1 = answer / 8.0
