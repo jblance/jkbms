@@ -172,6 +172,12 @@ class jkBmsDelegate(btle.DefaultDelegate):
         counter = record.pop(0)
         log.info ('Record number: {}'.format(counter))
 
+    def processCellDataRecord(self, record):
+        log.info('Processing cell data record')
+        del record[0:5]
+        counter = record.pop(0)
+        log.info ('Record number: {}'.format(counter))
+
     def processRecord(self, record):
         recordType = record[4]
         counter = record[5]
@@ -180,8 +186,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
         elif recordType == EXTENDED_RECORD:
             self.processExtendedRecord(record)
         elif recordType == CELL_DATA:
-            print('Cell data record')
-            pass
+            self.processCellDataRecord(record)
+        else:
+            log.info('Unknown record type')
 
     def decodeVolts(hexString):
         '''
