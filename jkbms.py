@@ -23,7 +23,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
     BLE delegate to deal with notifications (information) from the JKBMS device
     '''
 
-
     def __init__(self, params):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
@@ -152,7 +151,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
 
         log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
         log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
-        log.info ('Pass Code: {}'.format(passCode.decode('utf-8')))
+        log.debug ('Pass Code: {}'.format(passCode.decode('utf-8')))
         log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
         log.info ('Software Version: {}'.format(softwareVersion.decode('utf-8')))
         daysFloat = uptime/(60*60*24)
@@ -346,6 +345,7 @@ def main():
         # Connect to BLE Device
         connected = False
         attempts = 0
+        log.info('Attempting to connect to {}'.format(name))
         while not connected:
             attempts += 1
             if attempts > max_connection_attempts:
