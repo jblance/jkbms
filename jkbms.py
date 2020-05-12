@@ -182,7 +182,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         for i in range(0, number*size, size):
             volts.append(record[0+i:size+i])
         for volt in volts:
-            print ('Volts: {}'.format(self.decodeVolts(volt)))
+            log.info ('Hex: {}, Volts: {}'.format(volt, self.decodeVolts(volt)))
 
     def processRecord(self, record):
         recordType = record[4]
