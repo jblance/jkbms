@@ -185,7 +185,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             del record[0:size]
         for cell, volt in enumerate(volts):
             log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, self.decodeHex(volt)))
-        
+
         # Process cell wire resistances
         resistances = []
         size = 4
@@ -195,6 +195,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             del record[0:size]
         for cell, resistance in enumerate(resistances):
             log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, self.decodeHex(resistance)))
+        print (record)
 
     def processRecord(self, record):
         recordType = record[4]
@@ -386,7 +387,7 @@ def main():
 
         log.info ('Write getCellInfo to read handle', device.writeCharacteristic(handleRead, getCellInfo))
         loops = 0
-        recordsToGrab = 20
+        recordsToGrab = 1
         log.info ('Grabbing {} records (after inital response)'.format(recordsToGrab))
 
         while True:
