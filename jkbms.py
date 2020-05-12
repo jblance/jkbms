@@ -184,8 +184,17 @@ class jkBmsDelegate(btle.DefaultDelegate):
             volts.append(record[0:size])
             del record[0:size]
         for cell, volt in enumerate(volts):
-            log.info ('Cell: {}, Volts: {:.4f}'.format(cell, self.decodeHex(volt)))
-        print(record)
+            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, self.decodeHex(volt)))
+        
+        # Process cell wire resistances
+        resistances = []
+        size = 4
+        number = 25
+        for i in range(0, number):
+            resistances.append(record[0:size])
+            del record[0:size]
+        for cell, resistance in enumerate(resistances):
+            log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, self.decodeHex(resistance)))
 
     def processRecord(self, record):
         recordType = record[4]
