@@ -176,13 +176,16 @@ class jkBmsDelegate(btle.DefaultDelegate):
         del record[0:5]
         counter = record.pop(0)
         log.info ('Record number: {}'.format(counter))
+        # Process cell voltages
         volts = []
         size = 4
         number = 24
-        for i in range(0, number*size, size):
-            volts.append(record[0+i:size+i])
+        for i in range(0, number):
+            volts.append(record[0:size])
+            del record[0:size]
         for cell, volt in enumerate(volts):
             log.info ('Cell: {}, Volts: {:.4f}'.format(cell, self.decodeHex(volt)))
+        print(record)
 
     def processRecord(self, record):
         recordType = record[4]
@@ -213,7 +216,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         byte1 = hexString[3]
         if byte1 == 0x0:
             return answer
-        byte1Low = 0x40 - byte1
+        byte1Low = byte1 - 0x40
         answer = (2**(byte1Low*2))*2
         step1 = answer / 8.0
         step2 = answer / 128.0
