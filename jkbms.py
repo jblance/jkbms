@@ -150,11 +150,11 @@ class jkBmsDelegate(btle.DefaultDelegate):
             else:
                 passCode += bytes(_int.to_bytes(1, byteorder='big'))
 
-        log.info ('VendorID:', deviceName.decode('utf-8'))
-        log.info ('Device Name:', vendorID.decode('utf-8'))
-        log.info ('Pass Code:', passCode.decode('utf-8'))
-        log.info ('Hardware Version:', hardwareVersion.decode('utf-8'))
-        log.info ('Software Version:', softwareVersion.decode('utf-8'))
+        log.info ('VendorID: {}'.format(deviceName.decode('utf-8')))
+        log.info ('Device Name: {}'.format(vendorID.decode('utf-8')))
+        log.info ('Pass Code: {}'.format(passCode.decode('utf-8')))
+        log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
+        log.info ('Software Version: {}'.format(softwareVersion.decode('utf-8')))
         daysFloat = uptime/(60*60*24)
         days = math.trunc(daysFloat)
         hoursFloat = (daysFloat - days) * 24
