@@ -239,7 +239,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
         byte2High = byte2 >> 4
         byte2Low = byte2 & 0xf
         if byte2High & 8:
-            answer += (byte2High * step1 * 2) + (byte2Low * step2)
+            #answer += (byte2High * step1 * 2) + (byte2Low * step2)
+            answer += ((byte2High - 8) * step1 * 2) + (8 * step1) + (byte2Low * step2)
         else:
             answer += (byte2High * step1) + (byte2Low * step2)
 
