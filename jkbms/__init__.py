@@ -7,7 +7,7 @@ from .jkbmsdecode import *
 # import mppcommands
 # from .mpputils import mppUtils
 
-log = logging.getLogger('jkbms')
+log = logging.getLogger('JKBMS-BT')
 # setup logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 # ch = logging.StreamHandler()
 # create formatter and add it to the handlers
