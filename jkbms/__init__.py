@@ -43,10 +43,30 @@ def main():
         print ('Decode Hex {}'.format(args.decodeHex))
         print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
     else:
-        # Parse conifg file
-
         print ('Query BMS via BLE')
         log.info('Querying {} times'.format(args.loops))
-        for l in range(int(args.loops)):
-            jk = jkBMS('name', 'model', 'mac', 'command', 'tag', 'format', pause=60, maxConnectionAttempts=3, mqttBroker='localhost')
-            print(jk)
+        # Get config from config file
+        print ('Reading config file: {}'.format(args.configFile))
+        config.read(configFile)
+        if not config:
+            print ('Config not found or nothing parsed correctly')
+        sys.exit(1)
+        sections = config.sections()
+        if 'SETUP' in config:
+            mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
+            logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
+            max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
+            log.setLevel(logging_level)
+            sections.remove('SETUP')
+
+        # Process each section
+        for section in sections:
+            name = section
+            model = config[section].get('model')
+            mac = config[section].get('mac')
+            command = config[section].get('command')
+            tag = config[section].get('tag')
+            format = config[section].get('format')
+            jk = jkBMS(name, model, mac, command, tag, format, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
+            for l in range(int(args.loops)):
+                print(jk)

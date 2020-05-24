@@ -226,7 +226,7 @@ class jkBMS:
     - represents a JK BMS
     """
 
-    def __init__(self, name, model, mac, command, tag, format, pause=60, maxConnectionAttempts=3, mqttBroker='localhost'):
+    def __init__(self, name, model, mac, command, tag, format, maxConnectionAttempts=3, mqttBroker='localhost'):
         '''
         '''
         self.name = name
@@ -235,12 +235,10 @@ class jkBMS:
         self.command = command
         self.tag = tag
         self.format = format
-        self.pause = pause
         self.maxConnectionAttempts = maxConnectionAttempts
         self.mqttBroker = mqttBroker
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
-        log.debug('Additional config - pause: {}, maxConnectionAttemppts: {}, mqttBroker: {}'.format(self.pause, self.maxConnectionAttempts, self.mqttBroker))
-        print(getCellInfo)
+        log.debug('Additional config - maxConnectionAttemppts: {}, mqttBroker: {}'.format(self.maxConnectionAttempts, self.mqttBroker))
         return
         # Intialise BLE device
         device = btle.Peripheral(None)
