@@ -149,7 +149,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 passCode += bytes(_int.to_bytes(1, byteorder='big'))
 
         log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
-        publish({'VendorID': vendorID.decode('utf-8')}, format='influx2', broker='localhost')
+        publish({'VendorID': vendorID.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
         log.debug ('Pass Code: {}'.format(passCode.decode('utf-8')))
         log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
