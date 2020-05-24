@@ -5,18 +5,13 @@ from bluepy import btle
 
 import logging
 log = logging.getLogger('JKBMS-BT')
-# setup logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-# set default log levels
-log.setLevel(logging.CRITICAL)
-logging.basicConfig()
-
-import configparser
-config = configparser.ConfigParser()
 
 EXTENDED_RECORD = 1
 CELL_DATA       = 2
 INFO_RECORD     = 3
 
+getInfo = b'\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
+getCellInfo = b'\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
 
 class jkBmsDelegate(btle.DefaultDelegate):
     '''
@@ -208,90 +203,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
         else:
             log.info('Unknown record type')
 
-    def decodeHex(self, hexString):
-        '''
-        # For bluetooth battery monitor (model JK-B1A24S)
-        # - which encodes cell voltages into 4 bytes (hex encoded)
-        # - example 5f806240 -> 3.539
-        '''
-        answer = 0.0
-
-        # Make sure supplied String is long enough
-        if len(hexString) != 4:
-            log.warning('Hex encoded value must be 4 bytes long. Was {} length'.format(len(hexString)))
-            return None
-
-        # Process most significant byte (position 3)
-        byte1 = hexString[3]
-        if byte1 == 0x0:
-            return answer
-        byte1Low = byte1 - 0x40
-        answer = (2**(byte1Low*2))*2
-        step1 = answer / 8.0
-        step2 = answer / 128.0
-        step3 = answer / 2048.0
-        step4 = answer / 32768.0
-        step5 = answer / 524288.0
-        step6 = answer / 8388608.0
-
-        # position 2
-        byte2 = hexString[2]
-        byte2High = byte2 >> 4
-        byte2Low = byte2 & 0xf
-        if byte2High & 8:
-            #answer += (byte2High * step1 * 2) + (byte2Low * step2)
-            answer += ((byte2High - 8) * step1 * 2) + (8 * step1) + (byte2Low * step2)
-        else:
-            answer += (byte2High * step1) + (byte2Low * step2)
-
-        # position 1
-        byte3 = hexString[1]
-        byte3High = byte3 >> 4
-        byte3Low = byte3 & 0xf
-        answer += (byte3High * step3) + (byte3Low * step4)
-
-        # position 0
-        byte4 = hexString[0]
-        byte4High = byte4 >> 4
-        byte4Low = byte4 & 0xf
-        answer += (byte4High * step5) + (byte4Low * step6)
-
-        log.debug ('hexString: {}'.format(hexString))
-        log.debug ('hex(byte1): {}'.format(hex(byte1)))
-        log.debug ('byte1Low: {}'.format(byte1Low))
-        #log.debug ('byte2', byte2)
-        log.debug ('hex(byte2): {}'.format(hex(byte2)))
-        log.debug ('byte2High: {}'.format(byte2High))
-        log.debug ('byte2Low: {}'.format(byte2Low))
-        #log.debug ('byte3', byte3)
-        log.debug ('hex(byte3): {}'.format(hex(byte3)))
-        log.debug ('byte3High: {}'.format(byte3High))
-        log.debug ('byte3Low: {}'.format(byte3Low))
-        #log.debug ('byte4', byte4)
-        log.debug ('hex(byte4): {}'.format(hex(byte4)))
-        log.debug ('byte4High: {}'.format(byte4High))
-        log.debug ('byte4Low: {}'.format(byte4Low))
-
-        log.debug ('step1: {}'.format(step1))
-        log.debug ('step2: {}'.format(step2))
-        log.debug ('step3: {}'.format(step3))
-        log.debug ('step4: {}'.format(step4))
-        log.debug ('step5: {}'.format(step5))
-        log.debug ('step6: {}'.format(step6))
-        return answer
-
-    def crc8 (self, byteData):
-        '''
-        Generate 8 bit CRC of supplied string
-        '''
-        CRC = 0
-        #for j in range(0, len(str),2):
-        for b in byteData:
-            #char = int(str[j:j+2], 16)
-            #print (b)
-            CRC = CRC + b
-            CRC &= 0xff
-        return CRC
 
     def handleNotification(self, handle, data):
         # handle is the handle of the characteristic / descriptor that posted the notification
@@ -309,43 +220,28 @@ class jkBmsDelegate(btle.DefaultDelegate):
         #print('    {}'.format(data))
         #print('')
 
-def main():
-    '''
-    Main section
-    '''
+class jkBMS:
+    """
+    JK BMS Command Library
+    - represents a JK BMS
+    """
 
-    configFile = './jkbms.conf'
-    # Queries / info written to BMS to prompt responses
-    getInfo = b'\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
-    getCellInfo = b'\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
-    # Get config from config file
-    print ('Reading config file: {}'.format(configFile))
-    config.read(configFile)
-    if not config:
-        print ('Config not found or nothing parsed correctly')
-        sys.exit(1)
-    sections = config.sections()
-
-    if 'SETUP' in config:
-        pause = config['SETUP'].getint('pause', fallback=60)
-        mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
-        logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
-        max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
-        log.setLevel(logging_level)
-        sections.remove('SETUP')
-
-    # Process each section
-    # This might need threading?
-    # or notitfy to handle different devices?
-    for section in sections:
-        # print('MPP-Solar-Service: Execute - {}'.format(config[section]))
-        name = section
-        model = config[section].get('model')
-        mac = config[section].get('mac')
-        command = config[section].get('command')
-        tag = config[section].get('tag')
-        format = config[section].get('format')
-        log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(name, model, mac, command, tag, format))
+    def __init__(self, name, model, mac, command, tag, format, pause=60, maxConnectionAttempts=3, mqttBroker='localhost'):
+        '''
+        '''
+        self.name = name
+        self.model = model
+        self.mac = mac
+        self.command = command
+        self.tag = tag
+        self.format = format
+        self.pause = pause
+        self.maxConnectionAttempts = maxConnectionAttempts
+        self.mqttBroker = mqttBroker
+        log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
+        log.debug('Additional config - pause: {}, maxConnectionAttemppts: {}, mqttBroker: {}'.format(self.pause, self.maxConnectionAttempts, self.mqttBroker))
+        print(getCellInfo)
+        return
         # Intialise BLE device
         device = btle.Peripheral(None)
         device.withDelegate( jkBmsDelegate(device) )
@@ -406,16 +302,3 @@ def main():
 
         log.info ('Disconnecting...')
         device.disconnect()
-
-if __name__ == "__main__":
-    # execute only if run as a script and python3
-    if sys.version_info < (3,0):
-        print ('Python3 required')
-        sys.exit(1)
-    main()
-
-#print ('Hit <ENTER> to disconnect')
-#if (sys.version_info > (3, 0)):
-#    input()
-#else:
-#    raw_input()

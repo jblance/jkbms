@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 
 from .version import __version__  # noqa: F401
 from .jkbmsdecode import *
+from .jkbms import jkBMS
 # import mppcommands
 # from .mpputils import mppUtils
 
@@ -42,7 +43,10 @@ def main():
         print ('Decode Hex {}'.format(args.decodeHex))
         print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
     else:
+        # Parse conifg file
+
         print ('Query BMS via BLE')
         log.info('Querying {} times'.format(args.loops))
-    # mp = mppcommands.mppCommands(args.device, args.baud)
-    # mp = mppUtils(args.device, args.baud, args.model)
+        for l in range(int(args.loops)):
+            jk = jkBMS('name', 'model', 'mac', 'command', 'tag', 'format', pause=60, maxConnectionAttempts=3, mqttBroker='localhost')
+            print(jk)
