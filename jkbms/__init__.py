@@ -28,6 +28,9 @@ config = configparser.ConfigParser()
 def main():
     parser = ArgumentParser(description='JKBMS Utility, version: {}'.format(__version__))
     parser.add_argument('-c', '--configFile', help='Config file', default='/etc/jkbms/jkbms.conf')
+    parser.add_argument('-q', '--mqttBroker', help='MQTT Broker')
+    parser.add_argument('-n', '--name', help='Process on the device with this section name in the config file')
+    parser.add_argument('-p', '--printResultsOnly', action='store_true', help='Just print the results, dont try to send to the MQTT Broker')
     parser.add_argument('-r', '--records', help='Number of records to get from the BMS', default='1')
     parser.add_argument('-x', '--decodeHex', help='Hex to decode (will not communication to BMS)')
     parser.add_argument('-D', '--enableDebug', action='store_true', help='Enable Debug and above (i.e. all) messages')
@@ -53,15 +56,27 @@ def main():
         config.read(args.configFile)
         if not config:
             print ('Config not found or nothing parsed correctly')
-            sys.exit(1)
-        sections = config.sections()
-        if 'SETUP' in config:
-            mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
-            logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
-            max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
-            log.setLevel(logging_level)
-            sections.remove('SETUP')
-
+        else:
+            sections = config.sections()
+            if 'SETUP' in config:
+                mqtt_broker = config['SETUP'].get('mqtt_broker', fallback=None)
+                logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
+                max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
+                log.setLevel(logging_level)
+                sections.remove('SETUP')
+        # Command line options override config file
+        if args.mqttBroker:
+            mqtt_broker = args.mqttBroker
+        if args.printResultsOnly:
+            mqtt_broker = None
+        if args.name:
+            print('Looking for a section named {} in {}'.format(args.name, args.configFile))
+            if args.name in config:
+                # Only process this section
+                sections = [args.name]
+            else:
+                print ('Section called {} not found. Exiting'.format(args.name))
+                sys.exit(1)
         # Process each section
         for section in sections:
             name = section
@@ -73,7 +88,7 @@ def main():
             jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, records=args.records, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
             log.debug(str(jk))
             if jk.connect():
-                jk.getBLEData()
+                results = jk.getBLEData()
                 jk.disconnect()
             else:
                 print ('Failed to connect to {} {}'.format(self.name, self.mac))
