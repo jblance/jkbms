@@ -3,6 +3,7 @@ import logging
 from argparse import ArgumentParser
 
 from .version import __version__  # noqa: F401
+import jkbmsdecode
 # import mppcommands
 # from .mpputils import mppUtils
 
@@ -39,6 +40,7 @@ def main():
 
     if args.decodeHex:
         print ('Decode Hex')
+        print ('Hex: {} decoded to {}'.format(jkbmsdecode.decodeHex(args.decodeHex)))
     else:
         print ('Query BMS via BLE')
         log.info('Querying {} times'.format(args.loops))
