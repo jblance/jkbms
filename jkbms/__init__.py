@@ -48,7 +48,7 @@ def main():
 
     if args.decodeHex:
         print ('Decode Hex {}'.format(args.decodeHex))
-        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))        
+        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
     else:
         print ('Query BMS via BLE')
         log.info('Getting {} records'.format(args.records))
@@ -59,7 +59,7 @@ def main():
             print ('Config not found or nothing parsed correctly')
         else:
             if args.dumpConfigFile:
-                print(config)
+                print(str(config))
                 sys.exit()
             sections = config.sections()
             if 'SETUP' in config:
