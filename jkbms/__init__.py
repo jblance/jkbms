@@ -47,7 +47,7 @@ def main():
         print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
     else:
         print ('Query BMS via BLE')
-        log.info('Querying {} times'.format(args.loops))
+        log.info('Getting {} records'.format(args.records))
         # Get config from config file
         print ('Reading config file: {}'.format(args.configFile))
         config.read(args.configFile)
