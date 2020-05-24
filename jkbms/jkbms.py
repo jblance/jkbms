@@ -18,7 +18,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
     BLE delegate to deal with notifications (information) from the JKBMS device
     '''
 
-    def __init__(self, params):
+    def __init__(self, jkbms):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
         self.notificationData = bytearray()
@@ -214,12 +214,6 @@ class jkBmsDelegate(btle.DefaultDelegate):
             self.notificationData = bytearray()
             self.processRecord(record)
 
-        #len(self.notificationData)
-        #for x in range(len(data)):
-        #    sys.stdout.write ('{:02x}'.format(ord(data[x])))
-        #print('    {}'.format(data))
-        #print('')
-
 class jkBMS:
     """
     JK BMS Command Library
@@ -227,10 +221,10 @@ class jkBMS:
     """
 
     def __str__(self):
-        return 'name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.loops, self.maxConnectionAttempts, self.mqttBroker)
+        return 'JKBMS instance --- name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.loops, self.maxConnectionAttempts, self.mqttBroker)
 
 
-    def __init__(self, name, model, mac, command, tag, format, loops=1, maxConnectionAttempts=3, mqttBroker='localhost'):
+    def __init__(self, name, model, mac, command, tag, format, records=1, maxConnectionAttempts=3, mqttBroker='localhost'):
         '''
         '''
         self.name = name
@@ -239,37 +233,42 @@ class jkBMS:
         self.command = command
         self.tag = tag
         self.format = format
-        self.loops = loops
+        self.records = records
         self.maxConnectionAttempts = maxConnectionAttempts
         self.mqttBroker = mqttBroker
+        self.device = btle.Peripheral(None)
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
-        log.debug('Additional config - loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.loops, self.maxConnectionAttempts, self.mqttBroker))
-        return
+        log.debug('Additional config - records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.records, self.maxConnectionAttempts, self.mqttBroker))
+
+    def connect(self):
         # Intialise BLE device
-        device = btle.Peripheral(None)
-        device.withDelegate( jkBmsDelegate(device) )
+        self.device = btle.Peripheral(None)
+        self.device.withDelegate( jkBmsDelegate(self) )
         # Connect to BLE Device
         connected = False
         attempts = 0
-        log.info('Attempting to connect to {}'.format(name))
+        log.info('Attempting to connect to {}'.format(self.name))
         while not connected:
             attempts += 1
-            if attempts > max_connection_attempts:
-                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(name, mac, attempts - 1))
+            if attempts > self.maxConnectionAttempts:
+                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(self.name, self.mac, attempts - 1))
                 sys.exit(1)
             try:
-                device.connect(mac)
+                self.device.connect(self.mac)
                 connected = True
             except Exception as e:
                 continue
+        return connected
+
+    def getBLEData(self):
         # Get the device name
-        serviceId = device.getServiceByUUID(btle.AssignedNumbers.genericAccess)
+        serviceId = self.device.getServiceByUUID(btle.AssignedNumbers.genericAccess)
         deviceName = serviceId.getCharacteristics(btle.AssignedNumbers.deviceName)[0]
         log.info('Connected to {}'.format(deviceName.read()))
 
         # Connect to the notify service
         serviceNotifyUuid = 'ffe0'
-        serviceNotify = device.getServiceByUUID(serviceNotifyUuid)
+        serviceNotify = self.device.getServiceByUUID(serviceNotifyUuid)
 
         # Get the handles that we need to talk to
         ### Read
@@ -280,18 +279,18 @@ class jkBMS:
 
         ### TODO sort below
         # Need to dynamically find this handle....
-        log.info ('Enable 0x0b handle', device.writeCharacteristic(0x0b, b'\x01\x00'))
-        log.info ('Enable read handle', device.writeCharacteristic(handleRead, b'\x01\x00'))
-        log.info ('Write getInfo to read handle', device.writeCharacteristic(handleRead, getInfo))
+        log.info ('Enable 0x0b handle', self.device.writeCharacteristic(0x0b, b'\x01\x00'))
+        log.info ('Enable read handle', self.device.writeCharacteristic(handleRead, b'\x01\x00'))
+        log.info ('Write getInfo to read handle', self.device.writeCharacteristic(handleRead, getInfo))
         secs = 0
         while True:
-            if device.waitForNotifications(1.0):
+            if self.device.waitForNotifications(1.0):
                 continue
             secs += 1
             if secs > 5 :
                 break
 
-        log.info ('Write getCellInfo to read handle', device.writeCharacteristic(handleRead, getCellInfo))
+        log.info ('Write getCellInfo to read handle', self.device.writeCharacteristic(handleRead, getCellInfo))
         loops = 0
         recordsToGrab = 1
         log.info ('Grabbing {} records (after inital response)'.format(recordsToGrab))
@@ -300,8 +299,9 @@ class jkBMS:
             loops += 1
             if loops > recordsToGrab * 15 + 16:
                 break
-            if device.waitForNotifications(1.0):
+            if self.device.waitForNotifications(1.0):
                 continue
 
+    def disconnect(self):
         log.info ('Disconnecting...')
-        device.disconnect()
+        self.device.disconnect()
