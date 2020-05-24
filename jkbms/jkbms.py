@@ -221,7 +221,7 @@ class jkBMS:
     """
 
     def __str__(self):
-        return 'JKBMS instance --- name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.loops, self.maxConnectionAttempts, self.mqttBroker)
+        return 'JKBMS instance --- name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.records, self.maxConnectionAttempts, self.mqttBroker)
 
 
     def __init__(self, name, model, mac, command, tag, format, records=1, maxConnectionAttempts=3, mqttBroker='localhost'):
