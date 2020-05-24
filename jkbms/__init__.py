@@ -59,7 +59,7 @@ def main():
             print ('Config not found or nothing parsed correctly')
         else:
             if args.dumpConfigFile:
-                print(str(config))
+                print({section: dict(config[section]) for section in config.sections()})
                 sys.exit()
             sections = config.sections()
             if 'SETUP' in config:
