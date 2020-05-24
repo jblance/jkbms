@@ -6,6 +6,9 @@ from bluepy import btle
 import logging
 log = logging.getLogger('JKBMS-BT')
 
+import configparser
+config = configparser.ConfigParser()
+
 EXTENDED_RECORD = 1
 CELL_DATA       = 2
 INFO_RECORD     = 3
