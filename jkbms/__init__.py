@@ -50,7 +50,7 @@ def main():
         log.info('Querying {} times'.format(args.loops))
         # Get config from config file
         print ('Reading config file: {}'.format(args.configFile))
-        config.read(configFile)
+        config.read(args.configFile)
         if not config:
             print ('Config not found or nothing parsed correctly')
         sys.exit(1)
