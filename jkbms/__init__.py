@@ -21,6 +21,9 @@ log.setLevel(logging.WARNING)
 # ch.setLevel(logging.WARNING)
 logging.basicConfig()
 
+import configparser
+config = configparser.ConfigParser()
+
 
 def main():
     parser = ArgumentParser(description='JKBMS Utility, version: {}'.format(__version__))
