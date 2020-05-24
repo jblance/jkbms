@@ -6,6 +6,8 @@ from bluepy import btle
 import logging
 log = logging.getLogger('JKBMS-BT')
 
+from .publishMqtt import publishMqtt as publish
+
 EXTENDED_RECORD = 1
 CELL_DATA       = 2
 INFO_RECORD     = 3
@@ -147,6 +149,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
                 passCode += bytes(_int.to_bytes(1, byteorder='big'))
 
         log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
+        publish({'VendorID': vendorID.decode('utf-8')}, format='influx2', broker='localhost')
         log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
         log.debug ('Pass Code: {}'.format(passCode.decode('utf-8')))
         log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
