@@ -53,8 +53,9 @@ def main():
         config.read(args.configFile)
         if not config:
             print ('Config not found or nothing parsed correctly')
-        sys.exit(1)
+            sys.exit(1)
         sections = config.sections()
+        print (sections)
         if 'SETUP' in config:
             mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
             logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
