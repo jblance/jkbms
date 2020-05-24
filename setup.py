@@ -96,8 +96,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'jkbms=jkbms.jkbms:main',
-            'jkbms-decode=decodeJK:main',
+            'jkbms=jkbms:main',
             'jkbms-service=jkbms.jkbms_service:main',
         ],
     },
