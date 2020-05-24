@@ -6,9 +6,6 @@ from bluepy import btle
 import logging
 log = logging.getLogger('JKBMS-BT')
 
-import configparser
-config = configparser.ConfigParser()
-
 EXTENDED_RECORD = 1
 CELL_DATA       = 2
 INFO_RECORD     = 3
@@ -229,7 +226,11 @@ class jkBMS:
     - represents a JK BMS
     """
 
-    def __init__(self, name, model, mac, command, tag, format, maxConnectionAttempts=3, mqttBroker='localhost'):
+    def __str__(self):
+        return 'name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.loops, self.maxConnectionAttempts, self.mqttBroker)
+
+
+    def __init__(self, name, model, mac, command, tag, format, loops=1, maxConnectionAttempts=3, mqttBroker='localhost'):
         '''
         '''
         self.name = name
@@ -238,10 +239,11 @@ class jkBMS:
         self.command = command
         self.tag = tag
         self.format = format
+        self.loops = loops
         self.maxConnectionAttempts = maxConnectionAttempts
         self.mqttBroker = mqttBroker
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
-        log.debug('Additional config - maxConnectionAttemppts: {}, mqttBroker: {}'.format(self.maxConnectionAttempts, self.mqttBroker))
+        log.debug('Additional config - loops: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.loops, self.maxConnectionAttempts, self.mqttBroker))
         return
         # Intialise BLE device
         device = btle.Peripheral(None)

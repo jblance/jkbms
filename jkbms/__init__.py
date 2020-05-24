@@ -55,7 +55,6 @@ def main():
             print ('Config not found or nothing parsed correctly')
             sys.exit(1)
         sections = config.sections()
-        print (sections)
         if 'SETUP' in config:
             mqtt_broker = config['SETUP'].get('mqtt_broker', fallback='localhost')
             logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
@@ -71,6 +70,5 @@ def main():
             command = config[section].get('command')
             tag = config[section].get('tag')
             format = config[section].get('format')
-            jk = jkBMS(name, model, mac, command, tag, format, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
-            for l in range(int(args.loops)):
-                print(jk)
+            jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, loops=args.loops, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
+            print(jk)
