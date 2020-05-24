@@ -33,6 +33,7 @@ def main():
     parser.add_argument('-p', '--printResultsOnly', action='store_true', help='Just print the results, dont try to send to the MQTT Broker')
     parser.add_argument('-r', '--records', help='Number of records to get from the BMS', default='1')
     parser.add_argument('-x', '--decodeHex', help='Hex to decode (will not communication to BMS)')
+    parser.add_argument('-d', '--dumpConfigFile', action='store_true', help='Print the config file and exit')
     parser.add_argument('-D', '--enableDebug', action='store_true', help='Enable Debug and above (i.e. all) messages')
     parser.add_argument('-I', '--enableInfo', action='store_true', help='Enable Info and above level messages')
     args = parser.parse_args()
@@ -47,7 +48,7 @@ def main():
 
     if args.decodeHex:
         print ('Decode Hex {}'.format(args.decodeHex))
-        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
+        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))        
     else:
         print ('Query BMS via BLE')
         log.info('Getting {} records'.format(args.records))
@@ -57,6 +58,9 @@ def main():
         if not config:
             print ('Config not found or nothing parsed correctly')
         else:
+            if args.dumpConfigFile:
+                print(config)
+                sys.exit()
             sections = config.sections()
             if 'SETUP' in config:
                 mqtt_broker = config['SETUP'].get('mqtt_broker', fallback=None)
