@@ -39,8 +39,8 @@ def main():
         # ch.setLevel(logging.INFO)
 
     if args.decodeHex:
-        print ('Decode Hex')
-        print ('Hex: {} decoded to {}'.format(jkbmsdecode.decodeHex(args.decodeHex)))
+        print ('Decode Hex {}'.format(args.decodeHex))
+        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
     else:
         print ('Query BMS via BLE')
         log.info('Querying {} times'.format(args.loops))
