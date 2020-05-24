@@ -313,11 +313,17 @@ def main():
     '''
     Main section
     '''
+
+    configFile = './jkbms.conf'
     # Queries / info written to BMS to prompt responses
     getInfo = b'\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
     getCellInfo = b'\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
     # Get config from config file
-    config.read('./jkbms.conf')
+    print ('Reading config file: {}'.format(configFile))
+    config.read(configFile)
+    if not config:
+        print ('Config not found or nothing parsed correctly')
+        sys.exit(1)
     sections = config.sections()
 
     if 'SETUP' in config:
