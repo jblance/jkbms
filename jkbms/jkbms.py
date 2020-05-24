@@ -21,6 +21,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def __init__(self, jkbms):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
+        self.jkbms = jkbms
+        print ('Delegate {}'.format(str(jkbms)))
         self.notificationData = bytearray()
 
     def recordIsComplete(self):
@@ -252,7 +254,7 @@ class jkBMS:
             attempts += 1
             if attempts > self.maxConnectionAttempts:
                 log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(self.name, self.mac, attempts - 1))
-                sys.exit(1)
+                return connected
             try:
                 self.device.connect(self.mac)
                 connected = True
@@ -292,7 +294,7 @@ class jkBMS:
 
         log.info ('Write getCellInfo to read handle', self.device.writeCharacteristic(handleRead, getCellInfo))
         loops = 0
-        recordsToGrab = 1
+        recordsToGrab = self.records
         log.info ('Grabbing {} records (after inital response)'.format(recordsToGrab))
 
         while True:
