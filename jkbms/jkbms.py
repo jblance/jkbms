@@ -242,7 +242,10 @@ class jkBMS:
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
         log.debug('Additional config - records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.records, self.maxConnectionAttempts, self.mqttBroker))
 
-    def publish(self, )
+    def publish(self):
+        pass
+
+
     def connect(self):
         # Intialise BLE device
         self.device = btle.Peripheral(None)
