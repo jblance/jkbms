@@ -7,6 +7,7 @@ import logging
 log = logging.getLogger('JKBMS-BT')
 
 from .publishMqtt import publishMqtt as publish
+from .jkbmsdecode import *
 
 EXTENDED_RECORD = 1
 CELL_DATA       = 2
@@ -45,7 +46,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         if len(self.notificationData) == 300 or len(self.notificationData) == 320:
             # check the crc/checksum is correct for the record data
             crc = ord(self.notificationData[-1:])
-            calcCrc = self.crc8(self.notificationData[:-1])
+            calcCrc = crc8(self.notificationData[:-1])
             #print (crc, calcCrc)
             if crc == calcCrc:
                 return True
@@ -183,7 +184,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             volts.append(record[0:size])
             del record[0:size]
         for cell, volt in enumerate(volts):
-            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, self.decodeHex(volt)))
+            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, decodeHex(volt)))
 
         # Process cell wire resistances
         resistances = []
@@ -193,7 +194,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             resistances.append(record[0:size])
             del record[0:size]
         for cell, resistance in enumerate(resistances):
-            log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, self.decodeHex(resistance)))
+            log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
         print (record)
 
     def processRecord(self, record):
