@@ -321,6 +321,7 @@ class jkBMS:
         while True:
             loops += 1
             if loops > recordsToGrab * 15 + 16:
+                print('Got {} records'.format(recordsToGrab))
                 break
             if self.device.waitForNotifications(1.0):
                 continue
