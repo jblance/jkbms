@@ -179,6 +179,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
 
     def processCellDataRecord(self, record):
         log.info('Processing cell data record')
+        log.info('Record length {}'.format(len(record)))
         del record[0:5]
         counter = record.pop(0)
         log.info ('Record number: {}'.format(counter))
@@ -195,6 +196,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             publish({'VoltageCell{:02d}'.format(cell+1): float(decodeHex(volt))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
 
         # Process cell wire resistances
+        log.info('Process wire resistances')
         resistances = []
         size = 4
         number = 25
