@@ -23,7 +23,9 @@ def decodeHex(hexToDecode):
     '''
     Code a 4 byte hexString to volts as per jkbms approach (blackbox determined)
     '''
-    hexString = bytes.fromhex(hexToDecode)
+    # hexString = bytes.fromhex(hexToDecode)
+    hexString = hexToDecode
+    print('hexString: {}'.format(hexString))
 
     answer = 0.0
 
