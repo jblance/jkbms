@@ -37,7 +37,7 @@ def decodeHex(hexToDecode):
     # Process most significant byte (position 3)
     byte1 = hexString[3]
     if byte1 == 0x0:
-        sys.exit(0)
+        return 0
     byte1Low = byte1 - 0x40
     answer = (2**(byte1Low*2))*2
     log.info('After position 3: {}'.format(answer))
