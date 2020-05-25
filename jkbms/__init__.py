@@ -3,7 +3,7 @@ import logging
 from argparse import ArgumentParser
 
 from .version import __version__  # noqa: F401
-from .jkbmsdecode import *
+# from .jkbmsdecode import *
 from .jkbms import jkBMS
 # import mppcommands
 # from .mpputils import mppUtils
