@@ -38,15 +38,6 @@ def main():
     parser.add_argument('-I', '--enableInfo', action='store_true', help='Enable Info and above level messages')
     args = parser.parse_args()
 
-    # Turn on debug if needed
-    if(args.enableDebug):
-        log.setLevel(logging.DEBUG)
-        # ch.setLevel(logging.DEBUG)
-    elif(args.enableInfo):
-        log.setLevel(logging.INFO)
-        # ch.setLevel(logging.INFO)
-    print('Logging level: {}'.format(log.level))
-
     if args.decodeHex:
         print ('Decode Hex {}'.format(args.decodeHex))
         print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
@@ -70,6 +61,14 @@ def main():
                 log.setLevel(logging_level)
                 sections.remove('SETUP')
         # Command line options override config file
+        # Turn on debug if needed
+        if(args.enableDebug):
+            log.setLevel(logging.DEBUG)
+            # ch.setLevel(logging.DEBUG)
+        elif(args.enableInfo):
+            log.setLevel(logging.INFO)
+            # ch.setLevel(logging.INFO)
+        print('Logging level: {}'.format(log.level))
         if args.mqttBroker:
             mqtt_broker = args.mqttBroker
         if args.printResultsOnly:
