@@ -153,9 +153,13 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
         publish({'VendorID': vendorID.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
+        publish({'DeviceName': deviceName.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         log.debug ('Pass Code: {}'.format(passCode.decode('utf-8')))
+        # publish({'PassCode': passCode.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
+        publish({'HardwareVersion': hardwareVersion.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         log.info ('Software Version: {}'.format(softwareVersion.decode('utf-8')))
+        publish({'SoftwareVersion': softwareVersion.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         daysFloat = uptime/(60*60*24)
         days = math.trunc(daysFloat)
         hoursFloat = (daysFloat - days) * 24
@@ -165,6 +169,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         secondsFloat = (minutesFloat - minutes) * 60
         seconds = math.trunc(secondsFloat)
         log.info ('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
+        publish({'Uptime': '{}D{}H{}M{}S'.format(days, hours, minutes, seconds)}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
 
     def processExtendedRecord(self, record):
         log.info('Processing extended record')
@@ -187,6 +192,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         log.debug('Volts: {}'.format(volts))
         for cell, volt in enumerate(volts):
             log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, decodeHex(volt)))
+            publish({'VoltageCell{:02d}'.format(cell+1): '{:.4f}'.format(decodeHex(volt))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
 
         # Process cell wire resistances
         resistances = []
@@ -197,6 +203,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             del record[0:size]
         for cell, resistance in enumerate(resistances):
             log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
+            publish({'ResistanceCell{:02d}'.format(cell+1): '{:.4f}'.format(decodeHex(resistance))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
         print (record)
 
     def processRecord(self, record):
