@@ -13,6 +13,7 @@ Need to create a config file `/etc/jkbms/jkbms.conf`
 [SETUP]
 mqtt_broker = mqtthost
 max_connection_attempts = 3
+records = 1
 # Uncomment one of the logging_level lines
 # All messages at the uncommented level and higher will be displayed
 # i.e. DEBUG gives the most output and CRITICAL gives the least
