@@ -1,4 +1,8 @@
+#!/usr/bin/python3
 #
+#
+
+import paho.mqtt.publish as publish
 
 def publishMqtt(msgData, format='influx2', broker=None, tag=''):
     '''
@@ -17,3 +21,11 @@ def publishMqtt(msgData, format='influx2', broker=None, tag=''):
         # +-----------+--------+-+---------+-+---------+
         # msgs.append('{}={}'.format(key, float(result)))
         print('Influx2 {}:{}:{}:{}'.format(msgData, format, broker, tag))
+        # print('MPP-Solar-Service: format influx2 yet to be supported')
+        msgs = []
+        _data = msgData
+        for _item in _data:
+            payload = 'jkbms,command={} {}'.format(tag, _item)
+            msg = {'topic': 'jkbms', 'payload': payload}
+            msgs.append(msg)
+            publish.multiple(msgs, hostname=broker)
