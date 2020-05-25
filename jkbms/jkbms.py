@@ -196,6 +196,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             publish({'VoltageCell{:02d}'.format(cell+1): float(decodeHex(volt))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
 
         # Process cell wire resistances
+        print (record)
         log.info('Process wire resistances')
         resistances = []
         size = 4
