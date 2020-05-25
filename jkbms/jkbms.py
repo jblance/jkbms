@@ -31,6 +31,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def recordIsComplete(self):
         '''
         '''
+        print('Notification Data {}'.format(self.notificationData))
         # check for 'ack' record
         if self.notificationData.startswith(bytes.fromhex('aa5590eb')):
             log.info ('notificationData has ACK')
