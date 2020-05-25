@@ -9,6 +9,9 @@ import paho.mqtt.publish as publish
 import systemd.daemon
 import time
 
+import logging
+log = logging.getLogger('JKBMS-BT')
+
 from .jkbms import jkBMS
 
 
