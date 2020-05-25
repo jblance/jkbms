@@ -184,6 +184,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         for i in range(0, number):
             volts.append(record[0:size])
             del record[0:size]
+        log.debug('Volts: {}'.format(volts))
         for cell, volt in enumerate(volts):
             log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, decodeHex(volt)))
 
@@ -249,6 +250,7 @@ class jkBMS:
         self.device = btle.Peripheral(None)
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
         log.debug('Additional config - records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.records, self.maxConnectionAttempts, self.mqttBroker))
+        print('jkBMS Logging level: {}'.format(log.level))
 
     def publish(self):
         pass
