@@ -3,7 +3,7 @@ source: https://github.com/torfsen/python-systemd-tutorial
 
 ## Pre-reqs ##
 Need python-systemd package
-* `sudo apt-get install python-systemd`
+* `sudo apt-get install python3-systemd`
 
 Need to create a config file `/etc/jkbms/jkbms.conf`
 * Use the example `/etc/jkbms/jkbms.conf.example` as a start
