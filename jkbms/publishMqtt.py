@@ -25,7 +25,7 @@ def publishMqtt(msgData, format='influx2', broker=None, tag=''):
         msgs = []
         _data = msgData
         for _item in _data:
-            payload = 'jkbms,command={} {}'.format(tag, _item)
+            payload = 'jkbms,command={} {}={}'.format(tag, _item, _data[_item])
             msg = {'topic': 'jkbms', 'payload': payload}
             msgs.append(msg)
             publish.multiple(msgs, hostname=broker)
