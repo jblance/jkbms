@@ -31,7 +31,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
     def recordIsComplete(self):
         '''
         '''
-        print('Notification Data {}'.format(self.notificationData))
+        # print('Notification Data {}'.format(self.notificationData))
         # check for 'ack' record
         if self.notificationData.startswith(bytes.fromhex('aa5590eb')):
             log.info ('notificationData has ACK')
@@ -240,7 +240,10 @@ class jkBMS:
         self.command = command
         self.tag = tag
         self.format = format
-        self.records = records
+        try:
+            self.records = int(records)
+        except:
+            self.records = 1
         self.maxConnectionAttempts = maxConnectionAttempts
         self.mqttBroker = mqttBroker
         self.device = btle.Peripheral(None)
