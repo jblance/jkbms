@@ -25,7 +25,7 @@ def decodeHex(hexToDecode):
     '''
     # hexString = bytes.fromhex(hexToDecode)
     hexString = hexToDecode
-    print('hexString: {}'.format(hexString))
+    # print('hexString: {}'.format(hexString))
 
     answer = 0.0
 

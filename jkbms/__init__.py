@@ -45,6 +45,7 @@ def main():
     elif(args.enableInfo):
         log.setLevel(logging.INFO)
         # ch.setLevel(logging.INFO)
+    print('Logging level: {}'.format(log.level))
 
     if args.decodeHex:
         print ('Decode Hex {}'.format(args.decodeHex))
