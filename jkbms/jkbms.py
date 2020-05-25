@@ -196,8 +196,8 @@ class jkBmsDelegate(btle.DefaultDelegate):
             publish({'VoltageCell{:02d}'.format(cell+1): float(decodeHex(volt))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
 
         # Process cell wire resistances
-        print (record)
-        log.info('Process wire resistances')
+        # print (record)
+        log.info('Processing wire resistances')
         resistances = []
         size = 4
         number = 25
@@ -207,7 +207,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         for cell, resistance in enumerate(resistances):
             log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
             publish({'ResistanceCell{:02d}'.format(cell+1): float(decodeHex(resistance))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-        print (record)
+        # print (record)
 
     def processRecord(self, record):
         recordType = record[4]
