@@ -191,10 +191,13 @@ class jkBmsDelegate(btle.DefaultDelegate):
             volts.append(record[0:size])
             del record[0:size]
         log.debug('Volts: {}'.format(volts))
+        _totalvolt = 0
         for cell, volt in enumerate(volts):
-            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, decodeHex(volt)))
-            publish({'VoltageCell{:02d}'.format(cell+1): float(decodeHex(volt))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-
+            _volt = float(decodeHex(volt))
+            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, _volt))
+            publish({'VoltageCell{:02d}'.format(cell+1): _volt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
+            _totalvolt += _volt
+        publish({'VoltageTotal':  _totalvolt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
         # Process cell wire resistances
         # print (record)
         log.info('Processing wire resistances')
