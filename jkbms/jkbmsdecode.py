@@ -5,7 +5,7 @@ import logging
 log = logging.getLogger('JKBMS-BT')
 
 
-def crc8 (self, byteData):
+def crc8 (byteData):
     '''
     Generate 8 bit CRC of supplied string
     '''
