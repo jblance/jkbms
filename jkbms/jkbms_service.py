@@ -49,19 +49,20 @@ def main():
     systemd.daemon.notify('READY=1')
 
     # Build array of commands to run
-    for section in sections:
-        systemd.daemon.notify('WATCHDOG=1')
-        name = section
-        model = config[section].get('model')
-        mac = config[section].get('mac')
-        command = config[section].get('command')
-        tag = config[section].get('tag')
-        format = config[section].get('format')
-        jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, records=records, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
-        log.debug(str(jk))
-        if jk.connect():
+    while True:
+        for section in sections:
             systemd.daemon.notify('WATCHDOG=1')
-            jk.getBLEData()
-            jk.disconnect()
-        else:
-            print ('Failed to connect to {} {}'.format(self.name, self.mac))
+            name = section
+            model = config[section].get('model')
+            mac = config[section].get('mac')
+            command = config[section].get('command')
+            tag = config[section].get('tag')
+            format = config[section].get('format')
+            jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, records=records, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
+            log.debug(str(jk))
+            if jk.connect():
+                systemd.daemon.notify('WATCHDOG=1')
+                jk.getBLEData()
+                jk.disconnect()
+            else:
+                print ('Failed to connect to {} {}'.format(self.name, self.mac))
