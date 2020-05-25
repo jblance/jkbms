@@ -35,6 +35,7 @@ def main():
         mqtt_broker = config['SETUP'].get('mqtt_broker', fallback=None)
         logging_level = config['SETUP'].getint('logging_level', fallback=logging.CRITICAL)
         max_connection_attempts = config['SETUP'].getint('max_connection_attempts', fallback=3)
+        records = config['SETUP'].getint('records', fallback=1)
         log.setLevel(logging_level)
         sections.remove('SETUP')
     else:
@@ -53,7 +54,7 @@ def main():
         command = config[section].get('command')
         tag = config[section].get('tag')
         format = config[section].get('format')
-        jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, records=args.records, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
+        jk = jkBMS(name=name, model=model, mac=mac, command=command, tag=tag, format=format, records=records, maxConnectionAttempts=max_connection_attempts, mqttBroker=mqtt_broker)
         log.debug(str(jk))
         if jk.connect():
             systemd.daemon.notify('WATCHDOG=1')
