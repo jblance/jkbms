@@ -41,6 +41,9 @@ def main():
     else:
         print('JKBMS-Service: Config file missing SETUP section')
     print('JKBMS-Service: Config setting - mqtt_broker: {}'.format(mqtt_broker))
+    print('JKBMS-Service: Config setting - logging_level: {}'.format(logging_level))
+    print('JKBMS-Service: Config setting - records: {}'.format(records))
+    print('JKBMS-Service: Config setting - max_connection_attempts: {}'.format(max_connection_attempts))
     print('JKBMS-Service: Config setting - command sections found: {}'.format(len(sections)))
     # Tell systemd that our service is ready
     systemd.daemon.notify('READY=1')
