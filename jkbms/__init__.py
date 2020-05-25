@@ -1,5 +1,13 @@
 # !/usr/bin/python3
 import logging
+from argparse import ArgumentParser
+
+from .version import __version__  # noqa: F401
+from .jkbmsdecode import *
+from .jkbms import jkBMS
+# import mppcommands
+# from .mpputils import mppUtils
+
 log = logging.getLogger('JKBMS-BT')
 # setup logging (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 # ch = logging.StreamHandler()
@@ -12,16 +20,6 @@ log = logging.getLogger('JKBMS-BT')
 log.setLevel(logging.WARNING)
 # ch.setLevel(logging.WARNING)
 logging.basicConfig()
-
-from argparse import ArgumentParser
-
-from .version import __version__  # noqa: F401
-from .jkbmsdecode import *
-from .jkbms import jkBMS
-# import mppcommands
-# from .mpputils import mppUtils
-
-
 
 import configparser
 config = configparser.ConfigParser()
