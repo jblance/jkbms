@@ -32,7 +32,7 @@ def decodeHex(hexToDecode):
     # Make sure supplied String is long enough
     if len(hexString) != 4:
         log.warning('Hex encoded value must be 4 bytes long. Was {} length'.format(len(hexString)))
-        sys.exit(1)
+        return 0
 
     # Process most significant byte (position 3)
     byte1 = hexString[3]
