@@ -206,7 +206,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
             del record[0:size]
         for cell, resistance in enumerate(resistances):
             log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
-            publish({'ResistanceCell{:02d}'.format(cell+1): float(decodeHex(resistance))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
+            publish({'ResistanceCell{:02d}'.format(cell): float(decodeHex(resistance))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
         # print (record)
 
     def processRecord(self, record):
@@ -261,10 +261,6 @@ class jkBMS:
         log.debug('Config data - name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format))
         log.debug('Additional config - records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.records, self.maxConnectionAttempts, self.mqttBroker))
         print('jkBMS Logging level: {}'.format(log.level))
-
-    def publish(self):
-        pass
-
 
     def connect(self):
         # Intialise BLE device
