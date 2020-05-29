@@ -9,3 +9,7 @@ Python library to talk to a JK-B1A24S or B2A24S battery monitor via bluetooth (B
 - bluepy `sudo pip3 install bluepy`
 - paho-mqtt if publishing to MQTT `sudo pip3 install paho-mqtt`
 - a device with BLE support (Raspberry Pi 3 or 4 have BLE builtin)
+
+
+## if you are using the daemon ##
+check the [daemon readme](daemon/README.md)
