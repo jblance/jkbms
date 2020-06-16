@@ -5,20 +5,17 @@
 #
 from argparse import ArgumentParser
 import configparser
-import paho.mqtt.publish as publish
-import systemd.daemon
-import time
-
 import logging
-log = logging.getLogger('JKBMS-BT')
+import systemd.daemon
 
 from .jkbms import jkBMS
+
+log = logging.getLogger('JKBMS-BT')
 
 
 def main():
     # Some default defaults
     mqtt_broker = 'localhost'
-    sectionArray = []
 
     # Process arguments
     parser = ArgumentParser(description='JKBMS Helper Service')
@@ -65,4 +62,4 @@ def main():
                 jk.getBLEData()
                 jk.disconnect()
             else:
-                print ('Failed to connect to {} {}'.format(self.name, self.mac))
+                print('Failed to connect to {} {}'.format(name, mac))

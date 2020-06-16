@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-import sys
-import math
 from bluepy import btle
-
 import logging
-log = logging.getLogger('JKBMS-BT')
-
+import math
 from .publishMqtt import publishMqtt as publish
-from .jkbmsdecode import *
+
+from .jkbmsdecode import crc8, decodeHex
 
 EXTENDED_RECORD = 1
-CELL_DATA       = 2
-INFO_RECORD     = 3
+CELL_DATA = 2
+INFO_RECORD = 3
 
 getInfo = b'\xaa\x55\x90\xeb\x97\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x11'
 getCellInfo = b'\xaa\x55\x90\xeb\x96\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10'
+
+log = logging.getLogger('JKBMS-BT')
+
 
 class jkBmsDelegate(btle.DefaultDelegate):
     '''
@@ -25,7 +25,7 @@ class jkBmsDelegate(btle.DefaultDelegate):
         btle.DefaultDelegate.__init__(self)
         # extra initialisation here
         self.jkbms = jkbms
-        print ('Delegate {}'.format(str(jkbms)))
+        print('Delegate {}'.format(str(jkbms)))
         self.notificationData = bytearray()
 
     def recordIsComplete(self):
@@ -34,13 +34,13 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # print('Notification Data {}'.format(self.notificationData))
         # check for 'ack' record
         if self.notificationData.startswith(bytes.fromhex('aa5590eb')):
-            log.info ('notificationData has ACK')
+            log.info('notificationData has ACK')
             self.notificationData = bytearray()
-            return False # strictly record is complete, but we dont process this
+            return False  # strictly record is complete, but we dont process this
         # check record starts with 'SOR'
         SOR = bytes.fromhex('55aaeb90')
         if not self.notificationData.startswith(SOR):
-            log.info ('No SOR found in notificationData')
+            log.info('No SOR found in notificationData')
             self.notificationData = bytearray()
             return False
         # check that length one of the valid lengths (300, 320)
@@ -48,19 +48,16 @@ class jkBmsDelegate(btle.DefaultDelegate):
             # check the crc/checksum is correct for the record data
             crc = ord(self.notificationData[-1:])
             calcCrc = crc8(self.notificationData[:-1])
-            #print (crc, calcCrc)
+            # print (crc, calcCrc)
             if crc == calcCrc:
                 return True
         return False
 
     def processInfoRecord(self, record):
         log.info('Processing info record')
-        #print (record)
         del record[0:5]
-        #print (record)
         counter = record.pop(0)
-        #print (record)
-        log.info ('Record number: {}'.format(counter))
+        log.info('Record number: {}'.format(counter))
         vendorID = bytearray()
         hardwareVersion = bytearray()
         softwareVersion = bytearray()
@@ -69,9 +66,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
         deviceName = bytearray()
         passCode = bytearray()
         # start at byte 7, go till 0x00 for device model
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
@@ -82,9 +79,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
             _int = record.pop(0)
         # process hardware version
         hardwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
@@ -95,9 +92,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
             _int = record.pop(0)
         # process software version
         softwareVersion += bytes(_int.to_bytes(1, byteorder='big'))
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
@@ -109,10 +106,10 @@ class jkBmsDelegate(btle.DefaultDelegate):
         # process uptime version
         upTimePos = 0
         uptime = _int * 256**upTimePos
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
             upTimePos += 1
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
@@ -129,9 +126,9 @@ class jkBmsDelegate(btle.DefaultDelegate):
             _int = record.pop(0)
         # device name
         deviceName += bytes(_int.to_bytes(1, byteorder='big'))
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
@@ -142,25 +139,25 @@ class jkBmsDelegate(btle.DefaultDelegate):
             _int = record.pop(0)
         # Passcode
         passCode += bytes(_int.to_bytes(1, byteorder='big'))
-        while len(record) > 0 :
+        while len(record) > 0:
             _int = record.pop(0)
-            #print (_int)
+            # print (_int)
             if _int == 0x00:
                 break
             else:
                 passCode += bytes(_int.to_bytes(1, byteorder='big'))
 
-        log.info ('VendorID: {}'.format(vendorID.decode('utf-8')))
+        log.info('VendorID: {}'.format(vendorID.decode('utf-8')))
         publish({'VendorID': vendorID.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-        log.info ('Device Name: {}'.format(deviceName.decode('utf-8')))
+        log.info('Device Name: {}'.format(deviceName.decode('utf-8')))
         publish({'DeviceName': deviceName.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-        log.debug ('Pass Code: {}'.format(passCode.decode('utf-8')))
+        log.debug('Pass Code: {}'.format(passCode.decode('utf-8')))
         # publish({'PassCode': passCode.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker)
-        log.info ('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
+        log.info('Hardware Version: {}'.format(hardwareVersion.decode('utf-8')))
         publish({'HardwareVersion': hardwareVersion.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-        log.info ('Software Version: {}'.format(softwareVersion.decode('utf-8')))
+        log.info('Software Version: {}'.format(softwareVersion.decode('utf-8')))
         publish({'SoftwareVersion': softwareVersion.decode('utf-8')}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
-        daysFloat = uptime/(60*60*24)
+        daysFloat = uptime / (60 * 60 * 24)
         days = math.trunc(daysFloat)
         hoursFloat = (daysFloat - days) * 24
         hours = math.trunc(hoursFloat)
@@ -168,21 +165,23 @@ class jkBmsDelegate(btle.DefaultDelegate):
         minutes = math.trunc(minutesFloat)
         secondsFloat = (minutesFloat - minutes) * 60
         seconds = math.trunc(secondsFloat)
-        log.info ('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
+        log.info('Uptime: {}D{}H{}M{}S'.format(days, hours, minutes, seconds))
         publish({'Uptime': '{}D{}H{}M{}S'.format(days, hours, minutes, seconds)}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
+        log.info('Power Up Times: {}'.format(powerUpTimes))
+        publish({'Power Up Times: {}'.format(powerUpTimes)}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
 
     def processExtendedRecord(self, record):
         log.info('Processing extended record')
         del record[0:5]
         counter = record.pop(0)
-        log.info ('Record number: {}'.format(counter))
+        log.info('Record number: {}'.format(counter))
 
     def processCellDataRecord(self, record):
         log.info('Processing cell data record')
         log.info('Record length {}'.format(len(record)))
         del record[0:5]
         counter = record.pop(0)
-        log.info ('Record number: {}'.format(counter))
+        log.info('Record number: {}'.format(counter))
         # Process cell voltages
         volts = []
         size = 4
@@ -194,10 +193,10 @@ class jkBmsDelegate(btle.DefaultDelegate):
         _totalvolt = 0
         for cell, volt in enumerate(volts):
             _volt = float(decodeHex(volt))
-            log.info ('Cell: {:02d}, Volts: {:.4f}'.format(cell+1, _volt))
-            publish({'VoltageCell{:02d}'.format(cell+1): _volt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
+            log.info('Cell: {:02d}, Volts: {:.4f}'.format(cell + 1, _volt))
+            publish({'VoltageCell{:02d}'.format(cell + 1): _volt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
             _totalvolt += _volt
-        publish({'VoltageTotal':  _totalvolt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
+        publish({'VoltageTotal': _totalvolt}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
         # Process cell wire resistances
         # print (record)
         log.info('Processing wire resistances')
@@ -208,13 +207,13 @@ class jkBmsDelegate(btle.DefaultDelegate):
             resistances.append(record[0:size])
             del record[0:size]
         for cell, resistance in enumerate(resistances):
-            log.info ('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
+            log.info('Cell: {:02d}, Resistance: {:.4f}'.format(cell, decodeHex(resistance)))
             publish({'ResistanceCell{:02d}'.format(cell): float(decodeHex(resistance))}, format=self.jkbms.format, broker=self.jkbms.mqttBroker, tag=self.jkbms.tag)
         # print (record)
 
     def processRecord(self, record):
         recordType = record[4]
-        counter = record[5]
+        # counter = record[5]
         if recordType == INFO_RECORD:
             self.processInfoRecord(record)
         elif recordType == EXTENDED_RECORD:
@@ -224,16 +223,16 @@ class jkBmsDelegate(btle.DefaultDelegate):
         else:
             log.info('Unknown record type')
 
-
     def handleNotification(self, handle, data):
         # handle is the handle of the characteristic / descriptor that posted the notification
         # data is the data in this notification - may take multiple notifications to get all of a message
-        log.debug ('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
+        log.debug('From handle: {:#04x} Got {} bytes of data'.format(handle, len(data)))
         self.notificationData += bytearray(data)
         if self.recordIsComplete():
             record = self.notificationData
             self.notificationData = bytearray()
             self.processRecord(record)
+
 
 class jkBMS:
     """
@@ -243,7 +242,6 @@ class jkBMS:
 
     def __str__(self):
         return 'JKBMS instance --- name: {}, model: {}, mac: {}, command: {}, tag: {}, format: {}, records: {}, maxConnectionAttempts: {}, mqttBroker: {}'.format(self.name, self.model, self.mac, self.command, self.tag, self.format, self.records, self.maxConnectionAttempts, self.mqttBroker)
-
 
     def __init__(self, name, model, mac, command, tag, format, records=1, maxConnectionAttempts=3, mqttBroker=None):
         '''
@@ -256,7 +254,7 @@ class jkBMS:
         self.format = format
         try:
             self.records = int(records)
-        except:
+        except Exception:
             self.records = 1
         self.maxConnectionAttempts = maxConnectionAttempts
         self.mqttBroker = mqttBroker
@@ -268,7 +266,7 @@ class jkBMS:
     def connect(self):
         # Intialise BLE device
         self.device = btle.Peripheral(None)
-        self.device.withDelegate( jkBmsDelegate(self) )
+        self.device.withDelegate(jkBmsDelegate(self))
         # Connect to BLE Device
         connected = False
         attempts = 0
@@ -276,12 +274,12 @@ class jkBMS:
         while not connected:
             attempts += 1
             if attempts > self.maxConnectionAttempts:
-                log.warning ('Cannot connect to {} with mac {} - exceeded {} attempts'.format(self.name, self.mac, attempts - 1))
+                log.warning('Cannot connect to {} with mac {} - exceeded {} attempts'.format(self.name, self.mac, attempts - 1))
                 return connected
             try:
                 self.device.connect(self.mac)
                 connected = True
-            except Exception as e:
+            except Exception:
                 continue
         return connected
 
@@ -296,29 +294,29 @@ class jkBMS:
         serviceNotify = self.device.getServiceByUUID(serviceNotifyUuid)
 
         # Get the handles that we need to talk to
-        ### Read
+        # Read
         characteristicReadUuid = 'ffe3'
         characteristicRead = serviceNotify.getCharacteristics(characteristicReadUuid)[0]
         handleRead = characteristicRead.getHandle()
-        log.info ('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
+        log.info('Read characteristic: {}, handle {:x}'.format(characteristicRead, handleRead))
 
-        ### TODO sort below
+        # ## TODO sort below
         # Need to dynamically find this handle....
-        log.info ('Enable 0x0b handle', self.device.writeCharacteristic(0x0b, b'\x01\x00'))
-        log.info ('Enable read handle', self.device.writeCharacteristic(handleRead, b'\x01\x00'))
-        log.info ('Write getInfo to read handle', self.device.writeCharacteristic(handleRead, getInfo))
+        log.info('Enable 0x0b handle', self.device.writeCharacteristic(0x0b, b'\x01\x00'))
+        log.info('Enable read handle', self.device.writeCharacteristic(handleRead, b'\x01\x00'))
+        log.info('Write getInfo to read handle', self.device.writeCharacteristic(handleRead, getInfo))
         secs = 0
         while True:
             if self.device.waitForNotifications(1.0):
                 continue
             secs += 1
-            if secs > 5 :
+            if secs > 5:
                 break
 
-        log.info ('Write getCellInfo to read handle', self.device.writeCharacteristic(handleRead, getCellInfo))
+        log.info('Write getCellInfo to read handle', self.device.writeCharacteristic(handleRead, getCellInfo))
         loops = 0
         recordsToGrab = self.records
-        log.info ('Grabbing {} records (after inital response)'.format(recordsToGrab))
+        log.info('Grabbing {} records (after inital response)'.format(recordsToGrab))
 
         while True:
             loops += 1
@@ -329,5 +327,5 @@ class jkBMS:
                 continue
 
     def disconnect(self):
-        log.info ('Disconnecting...')
+        log.info('Disconnecting...')
         self.device.disconnect()

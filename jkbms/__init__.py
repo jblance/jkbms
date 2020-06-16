@@ -1,10 +1,14 @@
 # !/usr/bin/python3
+import configparser
 import logging
+import sys
+
 from argparse import ArgumentParser
 
+from .jkbmsdecode import decodeHex
 from .version import __version__  # noqa: F401
-# from .jkbmsdecode import *
 from .jkbms import jkBMS
+
 # import mppcommands
 # from .mpputils import mppUtils
 
@@ -21,7 +25,6 @@ log.setLevel(logging.WARNING)
 # ch.setLevel(logging.WARNING)
 logging.basicConfig()
 
-import configparser
 config = configparser.ConfigParser()
 
 
@@ -39,16 +42,16 @@ def main():
     args = parser.parse_args()
 
     if args.decodeHex:
-        print ('Decode Hex {}'.format(args.decodeHex))
-        print ('Hex: {} decoded to {}'.format(args.decodeHex, jkbmsdecode.decodeHex(args.decodeHex)))
+        print('Decode Hex {}'.format(args.decodeHex))
+        print('Hex: {} decoded to {}'.format(args.decodeHex, decodeHex(args.decodeHex)))
     else:
-        print ('Query BMS via BLE')
+        print('Query BMS via BLE')
         log.info('Getting {} records'.format(args.records))
         # Get config from config file
-        print ('Reading config file: {}'.format(args.configFile))
+        print('Reading config file: {}'.format(args.configFile))
         config.read(args.configFile)
         if not config:
-            print ('Config not found or nothing parsed correctly')
+            print('Config not found or nothing parsed correctly')
         else:
             if args.dumpConfigFile:
                 print({section: dict(config[section]) for section in config.sections()})
@@ -79,7 +82,7 @@ def main():
                 # Only process this section
                 sections = [args.name]
             else:
-                print ('Section called {} not found. Exiting'.format(args.name))
+                print('Section called {} not found. Exiting'.format(args.name))
                 sys.exit(1)
         # Process each section
         for section in sections:
@@ -95,4 +98,4 @@ def main():
                 jk.getBLEData()
                 jk.disconnect()
             else:
-                print ('Failed to connect to {} {}'.format(self.name, self.mac))
+                print('Failed to connect to {} {}'.format(name, mac))
