@@ -91,7 +91,7 @@ class jbBMSCharacteristic(Characteristic):
         callback(Characteristic.RESULT_SUCCESS, self._value[offset:])
 
     def onWriteRequest(self, data, offset, withoutResponse, callback):
-        print('jbBMSCharacteristic - %s - onWriteRequest: data = %s' % (self['uuid'], [hex(c) for c in data]))
+        print('jbBMSCharacteristic - %s - onWriteRequest: data = %s' % (self['uuid'], data))
         # if data == getInfo:
         if data[4] == 0x97:
             print('Got getInfo request')
