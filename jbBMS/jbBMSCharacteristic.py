@@ -93,12 +93,14 @@ class jbBMSCharacteristic(Characteristic):
             print('Got getInfo request')
             chunks = getChunks(getInfoData, self._maxValueSize)
             # print chunks
+            chunk = 0
             for chunk in chunks:
                 # print chunk, len(chunk)
+                chunk += 1
                 self._value = chunk
                 # self.emit(ATT_OP_HANDLE_NOTIFY, self._value)
                 if self._updateValueCallback:
-                    print('jbBMSCharacteristic - onWriteRequest, getInfo chunk sent')
+                    print('jbBMSCharacteristic - onWriteRequest, getInfo chunk %d sent' % chunk)
                     self._updateValueCallback(self._value)
         if data == getCellInfo:
             print('Got getCellInfo request')
