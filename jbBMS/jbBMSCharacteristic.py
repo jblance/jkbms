@@ -93,7 +93,7 @@ class jbBMSCharacteristic(Characteristic):
     def onWriteRequest(self, data, offset, withoutResponse, callback):
         print('jbBMSCharacteristic - %s - onWriteRequest: data = %s' % (self['uuid'], [hex(c) for c in data]))
         # if data == getInfo:
-        id data[4] == '\x97':
+        if data[4] == '\x97':
             print('Got getInfo request')
             chunks = getChunks(getInfoData, self._maxValueSize)
             # print chunks
