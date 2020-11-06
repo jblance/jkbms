@@ -56,9 +56,9 @@ bleno.start()
 
 print('Hit <ENTER> to disconnect')
 if (sys.version_info > (3, 0)):
-    sys.input()
+    input()
 else:
-    sys.raw_input()
+    raw_input()  # noqa 
 
 bleno.stopAdvertising()
 bleno.disconnect()
