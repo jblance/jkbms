@@ -124,7 +124,7 @@ class jbBMSCharacteristic(Characteristic):
                     self._updateValueCallback(self._value)
         else:
             self._value = data
-            # print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
+            print('jbBMSCharacteristic - %s - onWriteRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
             print('jbBMSCharacteristic - onWriteRequest')
         # data written - check what it was and handle? and respond...
         # self.emit(ATT_OP_HANDLE_NOTIFY, array.array('B', bytes.fromhex('55aaeb9003b44a4b2d4231413234530000000000')))
