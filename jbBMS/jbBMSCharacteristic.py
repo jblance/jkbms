@@ -64,24 +64,24 @@ with open('testinput.txt') as f:
     data = f.read()
     data = data.replace('\n', '')
     crc = crc8(data)
-    print (crc, hex(crc))
+    print(crc, hex(crc))
     if crc < 16:
         crc = '0{}'.format(hex(crc)[2:])
     else:
         crc = '{}'.format(hex(crc)[2:4])
-    print (crc)
+    print(crc)
     getCellInfoDataRepeat = array.array('B', bytes.fromhex(data) + bytes.fromhex(crc))
-    print (getCellInfoDataRepeat)
+    print(getCellInfoDataRepeat)
 
 
 def getChunks(_data, _size):
     chunks = []
     for i in range(0, len(_data), _size):
-        chunks.append(_data[0+i:_size+i])
+        chunks.append(_data[0 + i:_size + i])
     return chunks
 
-class jbBMSCharacteristic(Characteristic):
 
+class jbBMSCharacteristic(Characteristic):
     def __init__(self, uuid):
         Characteristic.__init__(self, {
             'uuid': uuid,
@@ -98,12 +98,11 @@ class jbBMSCharacteristic(Characteristic):
                 })
             ]
         })
-        print ('jbBMSCharacteristic __init__', uuid)
+        print('jbBMSCharacteristic __init__', uuid)
         self._uuid = uuid
         self._value = array.array('B', [0] * 0)
         self._updateValueCallback = None
         self._maxValueSize = 20
-
 
     def onReadRequest(self, offset, callback):
         print('jbBMSCharacteristic - %s - onReadRequest: value = %s' % (self['uuid'], [hex(c) for c in self._value]))
