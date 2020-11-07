@@ -30,9 +30,6 @@ def crc8(str):
 # getCellInfoDataRepeat = array.array('B', bytes.fromhex('55aaeb9002f3ec426140f3466240011c6240593a62403f976240bbc16240cbb96240edb762404c6c62401fa762400fb662400da16240739b6240b47b62408c3e6240d7876240000000000000000000000000000000000000000000000000000000000000000013315c3d0636143d26e0113d8021f03c1153363d8980123d7e7c033dac41233d1ad83c3d9d6f4f3d8eb51e3d6a2c293deb28653d189c523da3724e3deb94493d9ab2c23d0000000000000000000000000000000000000000000000000000000000000000947162408067bf3c00000000ffff000005000000000000000000000000000086324e4c4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009435500cde4a33fae77a43f0095'))
 
 # Settings for JK-BD6A20S10P
-'0xaa', '0x55', '0x90', '0xeb', '0x97', '0x0', '0x79', '0x62', '0x96', '0xed', '0xe3', '0xd0', '0x82', '0xa1', '0x9b', '0x5b', '0x3c', '0x9c', '0x4b', '0x5e'
-'0xaa', '0x55', '0x90', '0xeb', '0x97', '0x0', '0xd3', '0x27', '0x86', '0x3b', '0xe2', '0x12', '0x4d', '0xb0', '0xb6', '0xf7', '0x64', '0xa4', '0x4e', '0xc0'
-
 getInfo = "\xaa\x55\x90\xeb\x97\x00\xdf\x52\x88\x67\x9d\x0a\x09\x6b\x9a\xf6\x70\x9a\x17\xfd"
 getInfoData = array.array('B', bytes.fromhex('55aaeb9003b54a4b2d42443641323053313050000000342e300000000000342e312e37000000541d1600040000004e6f7468696e67204a4b31000000000031323334000000000000000000000000323030373038000032303036323834303735000000000000496e707574205573657264617461000031323334353600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c4aa5590ebc8010100000000000000000000000044'))
 
@@ -93,7 +90,7 @@ class jbBMSCharacteristic(Characteristic):
         print('jbBMSCharacteristic - %s - onWriteRequest: data = %s' % (self['uuid'], [hex(c) for c in data]))
         # if data == getInfo:
         if data[4] == 0x97:
-            print('Got getInfo request')
+            print('Got getInfo (03) request')
             chunks = getChunks(getInfoData, self._maxValueSize)
             # print chunks
             chunkcount = 0
@@ -105,8 +102,9 @@ class jbBMSCharacteristic(Characteristic):
                 if self._updateValueCallback:
                     print('jbBMSCharacteristic - onWriteRequest, getInfo chunk %d sent' % chunkcount)
                     self._updateValueCallback(self._value)
-        if data == getCellInfo:
-            print('Got getCellInfo request')
+        # if data == getCellInfo:
+        if data[4] == 0x96:
+            print('Got getCellInfo (01) request')
             # send initial response to getCellInfo request
             chunks = getChunks(getCellInfoDataInitial, self._maxValueSize)
             for chunk in chunks:
