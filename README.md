@@ -1,6 +1,9 @@
 # JK BMS Inquiry #
 
+**NOTE: This code has been moved into the mpp-solar codebase** see https://github.com/jblance/mpp-solar
 *WIP*
+
+
 
 Python library to talk to a JK-B1A24S or B2A24S battery monitor via bluetooth (BLE)
 
